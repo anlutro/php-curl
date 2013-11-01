@@ -17,3 +17,5 @@ $curl->addHeader('Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==');
 $allHeaders = $curl->getHeaders();
 $header = $curl->getHeaders('Accept-Charset');
 ```
+
+Comes with a Laravel service provider and facade. Add `anlutro\cURL\Laravel\cURLServiceProvider` to the array of providers in `app/config/app.php`, and (optionally) add `'cURL' => 'anlutro\cURL\Laravel\cURL'` to the array of aliases in the same file.
