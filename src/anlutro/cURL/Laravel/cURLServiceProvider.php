@@ -1,9 +1,20 @@
 <?php
+/**
+ * PHP OOP cURL
+ * 
+ * @author   Andreas Lutro <anlutro@gmail.com>
+ * @license  http://opensource.org/licenses/MIT
+ * @package  PHP cURL
+ */
+
 namespace anlutro\cURL\Laravel;
 
 use anlutro\cURL\cURL;
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * Service provider that bootstraps the cURL class in Laravel 4.
+ */
 class cURLServiceProvider extends ServiceProvider
 {
 

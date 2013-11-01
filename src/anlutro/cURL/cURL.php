@@ -1,6 +1,17 @@
 <?php
+/**
+ * PHP OOP cURL
+ * 
+ * @author   Andreas Lutro <anlutro@gmail.com>
+ * @license  http://opensource.org/licenses/MIT
+ * @package  PHP cURL
+ */
+
 namespace anlutro\cURL;
 
+/**
+ * cURL wrapper class.
+ */
 class cURL
 {
 	protected $headers = array();
@@ -23,7 +34,11 @@ class cURL
 	 */
 	public function get($url, array $query = array())
 	{
-		$this->init($url, $query);
+		if (!empty($query)) {
+			$url = $this->buildUrl($url, $query);
+		}
+
+		$this->init($url);
 
 		return $this->exec();
 	}
@@ -32,17 +47,19 @@ class cURL
 	 * Make a HTTP POST call.
 	 *
 	 * @param  string $url   
-	 * @param  array  $query 
 	 * @param  array  $data  
 	 *
 	 * @return string        response body
 	 */
-	public function post($url, array $query = array(), array $data = array())
+	public function post($url, array $data = array())
 	{
-		$this->init($url, $query);
+		$this->init($url);
 
 		$this->method = 'post';
-		$this->setPostData($data);
+
+		if (!empty($data)) {
+			$this->setPostData($data);
+		}
 
 		return $this->exec();
 	}
@@ -50,18 +67,15 @@ class cURL
 	/**
 	 * Make a HTTP DELETE call.
 	 *
-	 * @param  string $url   
-	 * @param  array  $query 
-	 * @param  array  $data  
+	 * @param  string $url
 	 *
 	 * @return string        response body
 	 */
-	public function delete($url, array $query = array(), array $data = array())
+	public function delete($url)
 	{
-		$this->init($url, $query);
+		$this->init($url);
 
 		$this->method = 'delete';
-		$this->setPostData($data);
 
 		return $this->exec();
 	}
@@ -100,33 +114,43 @@ class cURL
 	 *
 	 * @return mixed
 	 */
-	public function getInfo()
+	public function getCurlInfo()
 	{
 		return $this->lastResponseInfo;
+	}
+
+	/**
+	 * Build an URL with an optional query string.
+	 *
+	 * @param  string $url
+	 * @param  array  $query
+	 *
+	 * @return string
+	 */
+	public function buildUrl($url, array $query)
+	{
+		// append the query string
+		if (!empty($query)) {
+			$queryString = http_build_query($query);
+			$url .= '?' . $queryString;
+		}
+
+		return $url;
 	}
 
 	/**
 	 * Initialize a curl statement.
 	 *
 	 * @param  string $url
-	 * @param  array  $query GET parameters only!
 	 *
 	 * @return void
 	 */
-	protected function init($url = null, $query = null)
+	protected function init($url)
 	{
 		$this->ch = curl_init();
 		curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($this->ch, CURLOPT_HEADER, true);
-
-		if ($url && $query) {
-			$queryString = http_build_query($query);
-			$url .= '?' . $queryString;
-		}
-
-		if ($url) {
-			curl_setopt($this->ch, CURLOPT_URL, $url);
-		}
+		curl_setopt($this->ch, CURLOPT_URL, $url);
 	}
 
 	/**

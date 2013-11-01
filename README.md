@@ -7,8 +7,13 @@ $curl = new anlutro\cURL\cURL;
 // the raw body from the response is returned
 $html = $curl->get('http://www.google.com');
 
-// parameters: url, query string, post parameters. delete() has the same syntax
-$data = $curl->post('http://api.myservice.com', ['api_key' => 'my_api_key'], ['post' => 'data']);
+// easily build an url with a query string
+$url = $curl->buildUrl('http://www.google.com', ['s' => 'curl']);
+$html = $curl->get($url);
+
+// post() takes an array of POST data
+$url = $curl->buildUrl('http://api.myservice.com', ['api_key' => 'my_api_key']);
+$data = $curl->post($url, ['post' => 'data']);
 
 // add a header before sending a request
 $curl->addHeader('Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==');
