@@ -14,6 +14,8 @@ namespace anlutro\cURL;
  */
 class cURL
 {
+	protected $ch;
+
 	protected $headers = array();
 
 	protected $method = 'get';
@@ -29,16 +31,17 @@ class cURL
 	 *
 	 * @param  string $url   
 	 * @param  array  $query 
+	 * @param  array  $options optional - cURL options (curl_setopt_array)
 	 *
 	 * @return string        response body
 	 */
-	public function get($url, array $query = array())
+	public function get($url, array $query = array(), $options = array())
 	{
 		if (!empty($query)) {
 			$url = $this->buildUrl($url, $query);
 		}
 
-		$this->init($url);
+		$this->init($url, $options);
 
 		return $this->exec();
 	}
@@ -48,12 +51,13 @@ class cURL
 	 *
 	 * @param  string $url   
 	 * @param  array  $data  
+	 * @param  array  $options optional - cURL options (curl_setopt_array)
 	 *
 	 * @return string        response body
 	 */
-	public function post($url, array $data = array())
+	public function post($url, array $data = array(), $options = array())
 	{
-		$this->init($url);
+		$this->init($url, $options);
 
 		$this->method = 'post';
 
@@ -68,12 +72,13 @@ class cURL
 	 * Make a HTTP DELETE call.
 	 *
 	 * @param  string $url
+	 * @param  array  $options optional - cURL options (curl_setopt_array)
 	 *
 	 * @return string        response body
 	 */
-	public function delete($url)
+	public function delete($url, $options = array())
 	{
-		$this->init($url);
+		$this->init($url, $options);
 
 		$this->method = 'delete';
 
@@ -142,15 +147,20 @@ class cURL
 	 * Initialize a curl statement.
 	 *
 	 * @param  string $url
+	 * @param  array  $options optional - cURL options (curl_setopt_array)
 	 *
 	 * @return void
 	 */
-	protected function init($url)
+	protected function init($url, $options = array())
 	{
 		$this->ch = curl_init();
 		curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($this->ch, CURLOPT_HEADER, true);
 		curl_setopt($this->ch, CURLOPT_URL, $url);
+
+		if (!empty($options)) {
+			curl_setopt_array($this->ch, $options);
+		}
 	}
 
 	/**
