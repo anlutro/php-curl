@@ -1,5 +1,13 @@
 # Simple PHP cURL wrapper class
 
+## Installation
+
+https://packagist.org/packages/anlutro/curl
+
+`composer require anlutro/curl` - pick the latest version number from Packagist or the GitHub tag list.
+
+## Usage
+
 ```php
 <?php
 $curl = new anlutro\cURL\cURL;
