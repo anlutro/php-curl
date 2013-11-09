@@ -14,17 +14,52 @@ namespace anlutro\cURL;
  */
 class cURL
 {
+	/**
+	 * The cURL resource.
+	 */
 	protected $ch;
 
+	/**
+	 * The headers to be sent with the request.
+	 *
+	 * @var array
+	 */
 	protected $headers = array();
 
+	/**
+	 * The method the request should use.
+	 *
+	 * @var string
+	 */
 	protected $method = 'get';
 
+	/**
+	 * The last response in its original form.
+	 *
+	 * @var string
+	 */
 	protected $lastResponse;
 
-	protected $lastResponseInfo;
+	/**
+	 * The last response body.
+	 *
+	 * @var string
+	 */
+	protected $lastResponseBody;
 
+	/**
+	 * The last response headers.
+	 *
+	 * @var array
+	 */
 	protected $lastResponseHeaders;
+
+	/**
+	 * The results of curl_getinfo on the last request.
+	 *
+	 * @var array|false
+	 */
+	protected $lastResponseInfo;
 
 	/**
 	 * Make a HTTP GET call.
@@ -35,7 +70,7 @@ class cURL
 	 *
 	 * @return string        response body
 	 */
-	public function get($url, array $query = array(), $options = array())
+	public function get($url, array $query = array(), array $options = array())
 	{
 		if (!empty($query)) {
 			$url = $this->buildUrl($url, $query);
@@ -55,7 +90,7 @@ class cURL
 	 *
 	 * @return string        response body
 	 */
-	public function post($url, array $data = array(), $options = array())
+	public function post($url, array $data = array(), array $options = array())
 	{
 		$this->init($url, $options);
 
@@ -76,7 +111,7 @@ class cURL
 	 *
 	 * @return string        response body
 	 */
-	public function delete($url, $options = array())
+	public function delete($url, array $options = array())
 	{
 		$this->init($url, $options);
 
