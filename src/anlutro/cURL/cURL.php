@@ -31,7 +31,7 @@ class cURL
 	 *
 	 * @var string
 	 */
-	protected $method = 'get';
+	protected $method;
 
 	/**
 	 * The last response in its original form.
