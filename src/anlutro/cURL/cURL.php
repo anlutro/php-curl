@@ -77,6 +77,8 @@ class cURL
 		}
 
 		$this->init($url, $options);
+		
+		$this->method = 'get';
 
 		return $this->exec();
 	}
