@@ -65,7 +65,7 @@ class cURL
 	 * Make a HTTP GET call.
 	 *
 	 * @param  string $url   
-	 * @param  array  $query 
+	 * @param  array  $query   optional - GET parameters/query string
 	 * @param  array  $options optional - cURL options (curl_setopt_array)
 	 *
 	 * @return string        response body
@@ -87,7 +87,7 @@ class cURL
 	 * Make a HTTP POST call.
 	 *
 	 * @param  string $url   
-	 * @param  array  $data  
+	 * @param  array  $data    optional - POST data
 	 * @param  array  $options optional - cURL options (curl_setopt_array)
 	 *
 	 * @return string        response body
@@ -118,6 +118,67 @@ class cURL
 		$this->init($url, $options);
 
 		$this->method = 'delete';
+
+		return $this->exec();
+	}
+
+	/**
+	 * Make a HTTP PATCH call.
+	 *
+	 * @param  string $url   
+	 * @param  array  $data    optional - POST data
+	 * @param  array  $options optional - cURL options (curl_setopt_array)
+	 *
+	 * @return string        response body
+	 */
+	public function patch($url, array $data = array(), array $options = array())
+	{
+		$this->init($url, $options);
+
+		$this->method = 'patch';
+
+		if (!empty($data)) {
+			$this->setPostData($data);
+		}
+
+		return $this->exec();
+	}
+
+	/**
+	 * Make a HTTP PUT call.
+	 *
+	 * @param  string $url   
+	 * @param  array  $data    optional - POST data
+	 * @param  array  $options optional - cURL options (curl_setopt_array)
+	 *
+	 * @return string        response body
+	 */
+	public function put($url, array $data = array(), array $options = array())
+	{
+		$this->init($url, $options);
+
+		$this->method = 'put';
+
+		if (!empty($data)) {
+			$this->setPostData($data);
+		}
+
+		return $this->exec();
+	}
+
+	/**
+	 * Make a HTTP OPTIONS call.
+	 *
+	 * @param  string $url
+	 * @param  array  $options optional - cURL options (curl_setopt_array)
+	 *
+	 * @return string        response body
+	 */
+	public function options($url, array $options = array())
+	{
+		$this->init($url, $options);
+
+		$this->method = 'options';
 
 		return $this->exec();
 	}
@@ -164,8 +225,8 @@ class cURL
 	/**
 	 * Build an URL with an optional query string.
 	 *
-	 * @param  string $url
-	 * @param  array  $query
+	 * @param  string $url   the base URL without any query string
+	 * @param  array  $query array of GET parameters
 	 *
 	 * @return string
 	 */
@@ -220,8 +281,8 @@ class cURL
 	{
 		if ($this->method == 'post') {
 			curl_setopt($this->ch, CURLOPT_POST, 1);
-		} elseif ($this->method == 'delete') {
-			curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+		} elseif ($this->method !== 'get') {
+			curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, strtoupper($this->method));
 		}
 
 		curl_setopt($this->ch, CURLOPT_HTTPHEADER, $this->headers);
