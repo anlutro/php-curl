@@ -31,7 +31,7 @@ class cURL
 	 *
 	 * @var string
 	 */
-	protected $method = 'get';
+	protected $method;
 
 	/**
 	 * The last response in its original form.
@@ -77,6 +77,8 @@ class cURL
 		}
 
 		$this->init($url, $options);
+		
+		$this->method = 'get';
 
 		return $this->exec();
 	}
