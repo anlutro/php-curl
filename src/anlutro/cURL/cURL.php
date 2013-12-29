@@ -34,34 +34,6 @@ class cURL
 	protected $method;
 
 	/**
-	 * The last response in its original form.
-	 *
-	 * @var string
-	 */
-	protected $lastResponse;
-
-	/**
-	 * The last response body.
-	 *
-	 * @var string
-	 */
-	protected $lastResponseBody;
-
-	/**
-	 * The last response headers.
-	 *
-	 * @var array
-	 */
-	protected $lastResponseHeaders;
-
-	/**
-	 * The results of curl_getinfo on the last request.
-	 *
-	 * @var array|false
-	 */
-	protected $lastResponseInfo;
-
-	/**
 	 * Make a HTTP GET call.
 	 *
 	 * @param  string $url   
@@ -198,32 +170,13 @@ class cURL
 	}
 
 	/**
-	 * Get all or a specific header from the last curl statement.
-	 *
-	 * @param  string $header Name of the header to get. If not provided, gets
-	 * all headers from the last response.
-	 *
-	 * @return array
-	 */
-	public function getHeaders($header = null)
-	{
-		if (!$header) {
-			return $this->lastResponseHeaders;
-		}
-
-		if (array_key_exists($header, $this->lastResponseHeaders)) {
-			return $this->lastResponseHeaders[$header];
-		}
-	}
-
-	/**
 	 * Get info about the last executed curl statement.
 	 *
 	 * @return mixed
 	 */
 	public function getCurlInfo()
 	{
-		return $this->lastResponseInfo;
+		return $this->responseInfo;
 	}
 
 	/**
@@ -296,13 +249,11 @@ class cURL
 
 		curl_setopt($this->ch, CURLOPT_HTTPHEADER, $this->headers);
 
-		$response = curl_exec($this->ch);
-
-		$this->extractCurlInfo($response);
+		$response = $this->createResponseObject(curl_exec($this->ch));
 
 		curl_close($this->ch);
 
-		return $this->lastResponseBody;
+		return $response;
 	}
 
 	/**
@@ -313,17 +264,17 @@ class cURL
 	 *
 	 * @return void
 	 */
-	protected function extractCurlInfo($response)
+	protected function createResponseObject($response)
 	{
-		$this->lastResponse = $response;
-
-		$this->lastResponseInfo = curl_getinfo($this->ch);
+		$info = curl_getinfo($this->ch);
 
 		$headerSize = curl_getinfo($this->ch, CURLINFO_HEADER_SIZE);
 		$headerText = substr($response, 0, $headerSize);
-		$this->lastResponseHeaders = $this->headerToArray($headerText);
+		$headers = $this->headerToArray($headerText);
 
-		$this->lastResponseBody = substr($response, $headerSize);
+		$body = substr($response, $headerSize);
+
+		return new Response($body, $headers, $info);
 	}
 
 	/**
