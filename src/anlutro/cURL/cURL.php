@@ -34,34 +34,6 @@ class cURL
 	protected $method;
 
 	/**
-	 * The last response in its original form.
-	 *
-	 * @var string
-	 */
-	protected $lastResponse;
-
-	/**
-	 * The last response body.
-	 *
-	 * @var string
-	 */
-	protected $lastResponseBody;
-
-	/**
-	 * The last response headers.
-	 *
-	 * @var array
-	 */
-	protected $lastResponseHeaders;
-
-	/**
-	 * The results of curl_getinfo on the last request.
-	 *
-	 * @var array|false
-	 */
-	protected $lastResponseInfo;
-
-	/**
 	 * Make a HTTP GET call.
 	 *
 	 * @param  string $url   
@@ -72,7 +44,8 @@ class cURL
 	 */
 	public function get($url, array $query = array(), array $options = array())
 	{
-		if (!empty($query)) {
+		if ( ! empty($query))
+		{
 			$url = $this->buildUrl($url, $query);
 		}
 
@@ -98,7 +71,8 @@ class cURL
 
 		$this->method = 'post';
 
-		if (!empty($data)) {
+		if ( ! empty($data))
+		{
 			$this->setPostData($data);
 		}
 
@@ -137,7 +111,8 @@ class cURL
 
 		$this->method = 'patch';
 
-		if (!empty($data)) {
+		if ( ! empty($data))
+		{
 			$this->setPostData($data);
 		}
 
@@ -159,7 +134,8 @@ class cURL
 
 		$this->method = 'put';
 
-		if (!empty($data)) {
+		if ( ! empty($data))
+		{
 			$this->setPostData($data);
 		}
 
@@ -194,32 +170,13 @@ class cURL
 	}
 
 	/**
-	 * Get all or a specific header from the last curl statement.
-	 *
-	 * @param  string $header Name of the header to get. If not provided, gets
-	 * all headers from the last response.
-	 *
-	 * @return array
-	 */
-	public function getHeaders($header = null)
-	{
-		if (!$header) {
-			return $this->lastResponseHeaders;
-		}
-
-		if (array_key_exists($header, $this->lastResponseHeaders)) {
-			return $this->lastResponseHeaders[$header];
-		}
-	}
-
-	/**
 	 * Get info about the last executed curl statement.
 	 *
 	 * @return mixed
 	 */
 	public function getCurlInfo()
 	{
-		return $this->lastResponseInfo;
+		return $this->responseInfo;
 	}
 
 	/**
@@ -233,7 +190,8 @@ class cURL
 	public function buildUrl($url, array $query)
 	{
 		// append the query string
-		if (!empty($query)) {
+		if ( ! empty($query))
+		{
 			$queryString = http_build_query($query);
 			$url .= '?' . $queryString;
 		}
@@ -256,7 +214,8 @@ class cURL
 		curl_setopt($this->ch, CURLOPT_HEADER, true);
 		curl_setopt($this->ch, CURLOPT_URL, $url);
 
-		if (!empty($options)) {
+		if ( ! empty($options))
+		{
 			curl_setopt_array($this->ch, $options);
 		}
 	}
@@ -279,21 +238,22 @@ class cURL
 	 */
 	protected function exec()
 	{
-		if ($this->method == 'post') {
+		if ($this->method == 'post')
+		{
 			curl_setopt($this->ch, CURLOPT_POST, 1);
-		} elseif ($this->method !== 'get') {
+		}
+		elseif ($this->method !== 'get')
+		{
 			curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, strtoupper($this->method));
 		}
 
 		curl_setopt($this->ch, CURLOPT_HTTPHEADER, $this->headers);
 
-		$response = curl_exec($this->ch);
-
-		$this->extractCurlInfo($response);
+		$response = $this->createResponseObject(curl_exec($this->ch));
 
 		curl_close($this->ch);
 
-		return $this->lastResponseBody;
+		return $response;
 	}
 
 	/**
@@ -304,17 +264,17 @@ class cURL
 	 *
 	 * @return void
 	 */
-	protected function extractCurlInfo($response)
+	protected function createResponseObject($response)
 	{
-		$this->lastResponse = $response;
-
-		$this->lastResponseInfo = curl_getinfo($this->ch);
+		$info = curl_getinfo($this->ch);
 
 		$headerSize = curl_getinfo($this->ch, CURLINFO_HEADER_SIZE);
 		$headerText = substr($response, 0, $headerSize);
-		$this->lastResponseHeaders = $this->headerToArray($headerText);
+		$headers = $this->headerToArray($headerText);
 
-		$this->lastResponseBody = substr($response, $headerSize);
+		$body = substr($response, $headerSize);
+
+		return new Response($body, $headers, $info);
 	}
 
 	/**
@@ -328,21 +288,28 @@ class cURL
 	{
 		$tmp = explode("\r\n", $header);
 		$headers = array();
-		foreach ($tmp as $singleHeader) {
+
+		foreach ($tmp as $singleHeader)
+		{
 			$delimiter = strpos($singleHeader, ': ');
-			if ($delimiter !== false) {
+			if ($delimiter !== false)
+			{
 				$key = substr($singleHeader, 0, $delimiter);
 				$val = substr($singleHeader, $delimiter + 2);
 				$headers[$key] = $val;
-			} else {
+			}
+			else
+			{
 				$delimiter = strpos($singleHeader, ' ');
-				if ($delimiter !== false) {
+				if ($delimiter !== false)
+				{
 					$key = substr($singleHeader, 0, $delimiter);
 					$val = substr($singleHeader, $delimiter + 1);
 					$headers[$key] = $val;
 				}
 			}
 		}
+
 		return $headers;
 	}
 }
