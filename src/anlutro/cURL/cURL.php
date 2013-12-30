@@ -40,7 +40,7 @@ class cURL
 	 * @param  array  $query   optional - GET parameters/query string
 	 * @param  array  $options optional - cURL options (curl_setopt_array)
 	 *
-	 * @return string        response body
+	 * @return \anlutro\cURL\Response
 	 */
 	public function get($url, array $query = array(), array $options = array())
 	{
@@ -62,7 +62,7 @@ class cURL
 	 * @param  array  $data    optional - POST data
 	 * @param  array  $options optional - cURL options (curl_setopt_array)
 	 *
-	 * @return string        response body
+	 * @return \anlutro\cURL\Response
 	 */
 	public function post($url, array $data = array(), array $options = array())
 	{
@@ -83,7 +83,7 @@ class cURL
 	 * @param  string $url
 	 * @param  array  $options optional - cURL options (curl_setopt_array)
 	 *
-	 * @return string        response body
+	 * @return \anlutro\cURL\Response
 	 */
 	public function delete($url, array $options = array())
 	{
@@ -101,7 +101,7 @@ class cURL
 	 * @param  array  $data    optional - POST data
 	 * @param  array  $options optional - cURL options (curl_setopt_array)
 	 *
-	 * @return string        response body
+	 * @return \anlutro\cURL\Response
 	 */
 	public function patch($url, array $data = array(), array $options = array())
 	{
@@ -123,7 +123,7 @@ class cURL
 	 * @param  array  $data    optional - POST data
 	 * @param  array  $options optional - cURL options (curl_setopt_array)
 	 *
-	 * @return string        response body
+	 * @return \anlutro\cURL\Response
 	 */
 	public function put($url, array $data = array(), array $options = array())
 	{
@@ -144,7 +144,7 @@ class cURL
 	 * @param  string $url
 	 * @param  array  $options optional - cURL options (curl_setopt_array)
 	 *
-	 * @return string        response body
+	 * @return \anlutro\cURL\Response
 	 */
 	public function options($url, array $options = array())
 	{
@@ -163,16 +163,6 @@ class cURL
 	public function addHeader($value)
 	{
 		$this->headers[] = $value;
-	}
-
-	/**
-	 * Get info about the last executed curl statement.
-	 *
-	 * @return mixed
-	 */
-	public function getCurlInfo()
-	{
-		return $this->responseInfo;
 	}
 
 	/**
@@ -228,7 +218,7 @@ class cURL
 	/**
 	 * Execute the prepared curl resource.
 	 *
-	 * @return string response body
+	 * @return \anlutro\cURL\Response
 	 */
 	protected function exec()
 	{

@@ -10,7 +10,7 @@
 namespace anlutro\cURL;
 
 /**
- * cURL wrapper class.
+ * cURL response representation class.
  */
 class Response
 {
@@ -36,10 +36,9 @@ class Response
 	public $info;
 
 	/**
-	 * Create a new Eloquent model instance.
-	 *
-	 * @param  array  $attributes
-	 * @return void
+	 * @param string $body
+	 * @param array  $headers
+	 * @param mixed  $info
 	 */
 	public function __construct($body, $headers, $info)
 	{
@@ -56,13 +55,13 @@ class Response
 	 *
 	 * @return array
 	 */
-	public function getHeader($key)
+	public function getHeader($header = null)
 	{
-		return $this->headers[$key];
+		return $header === null ? $this->headers : $this->headers[$header];
 	}
 
 	/**
-	 * Convert the model instance to an array.
+	 * Convert the response instance to an array.
 	 *
 	 * @return array
 	 */
@@ -76,7 +75,17 @@ class Response
 	}
 
 	/**
-	 * Convert the object to its string representation, by returning responseBody as string.
+	 * Convert the response object to a JSON string.
+	 *
+	 * @return string
+	 */
+	public function toJson()
+	{
+		return json_encode($this->toArray());
+	}
+
+	/**
+	 * Convert the object to its string representation by returning the body.
 	 *
 	 * @return string
 	 */
