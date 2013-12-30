@@ -38,7 +38,7 @@ class Response
 	/**
 	 * The response code.
 	 *
-	 * @var int
+	 * @var string
 	 */
 	public $code;
 
