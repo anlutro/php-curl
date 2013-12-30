@@ -36,6 +36,13 @@ class Response
 	public $info;
 
 	/**
+	 * The response code.
+	 *
+	 * @var int
+	 */
+	public $code;
+
+	/**
 	 * @param string $body
 	 * @param array  $headers
 	 * @param mixed  $info
@@ -45,6 +52,10 @@ class Response
 		$this->body = $body;
 		$this->headers = $headers;
 		$this->info = $info;
+
+		if (isset($this->headers['HTTP/1.1'])) {
+			$this->code = $this->headers['HTTP/1.1'];
+		}
 	}
 
 	/**
