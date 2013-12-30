@@ -16,7 +16,7 @@ $response = $curl->get('http://www.google.com');
 
 // easily build an url with a query string
 $url = $curl->buildUrl('http://www.google.com', ['s' => 'curl']);
-$response = $curl->get($url)->body;
+$response = $curl->get($url);
 
 // post() takes an array of POST data
 $url = $curl->buildUrl('http://api.myservice.com', ['api_key' => 'my_api_key']);
