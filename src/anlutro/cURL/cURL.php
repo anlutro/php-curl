@@ -20,149 +20,61 @@ class cURL
 	protected $ch;
 
 	/**
-	 * The headers to be sent with the request.
+	 * Allowed methods => allows postdata
 	 *
 	 * @var array
 	 */
-	protected $headers = array();
+	protected $methods = array(
+		'get'     => false,
+		'post'    => true,
+		'put'     => true,
+		'patch'   => true,
+		'delete'  => false,
+		'options' => false,
+	);
 
 	/**
-	 * The method the request should use.
+	 * The request class to use.
 	 *
 	 * @var string
 	 */
-	protected $method;
+	protected $requestClass = 'anlutro\cURL\Request';
 
 	/**
-	 * Make a HTTP GET call.
+	 * The response class to use.
 	 *
-	 * @param  string $url   
-	 * @param  array  $query   optional - GET parameters/query string
-	 * @param  array  $options optional - cURL options (curl_setopt_array)
-	 *
-	 * @return \anlutro\cURL\Response
+	 * @var string
 	 */
-	public function get($url, array $query = array(), array $options = array())
+	protected $responseClass = 'anlutro\cURL\Response';
+
+	/**
+	 * Get allowed methods.
+	 *
+	 * @return array
+	 */
+	public function getAllowedMethods()
 	{
-		if (!empty($query)) {
-			$url = $this->buildUrl($url, $query);
-		}
-
-		$this->init($url, $options);
-		
-		$this->method = 'get';
-
-		return $this->exec();
+		return $this->methods;
 	}
 
 	/**
-	 * Make a HTTP POST call.
+	 * Set the request class.
 	 *
-	 * @param  string $url   
-	 * @param  array  $data    optional - POST data
-	 * @param  array  $options optional - cURL options (curl_setopt_array)
-	 *
-	 * @return \anlutro\cURL\Response
+	 * @param string $class
 	 */
-	public function post($url, array $data = array(), array $options = array())
+	public function setRequestClass($class)
 	{
-		$this->init($url, $options);
-
-		$this->method = 'post';
-
-		if (!empty($data)) {
-			$this->setPostData($data);
-		}
-
-		return $this->exec();
+		$this->requestClass = $class;
 	}
 
 	/**
-	 * Make a HTTP DELETE call.
+	 * Set the response class.
 	 *
-	 * @param  string $url
-	 * @param  array  $options optional - cURL options (curl_setopt_array)
-	 *
-	 * @return \anlutro\cURL\Response
+	 * @param string $class
 	 */
-	public function delete($url, array $options = array())
+	public function setResponseClass($class)
 	{
-		$this->init($url, $options);
-
-		$this->method = 'delete';
-
-		return $this->exec();
-	}
-
-	/**
-	 * Make a HTTP PATCH call.
-	 *
-	 * @param  string $url   
-	 * @param  array  $data    optional - POST data
-	 * @param  array  $options optional - cURL options (curl_setopt_array)
-	 *
-	 * @return \anlutro\cURL\Response
-	 */
-	public function patch($url, array $data = array(), array $options = array())
-	{
-		$this->init($url, $options);
-
-		$this->method = 'patch';
-
-		if (!empty($data)) {
-			$this->setPostData($data);
-		}
-
-		return $this->exec();
-	}
-
-	/**
-	 * Make a HTTP PUT call.
-	 *
-	 * @param  string $url   
-	 * @param  array  $data    optional - POST data
-	 * @param  array  $options optional - cURL options (curl_setopt_array)
-	 *
-	 * @return \anlutro\cURL\Response
-	 */
-	public function put($url, array $data = array(), array $options = array())
-	{
-		$this->init($url, $options);
-
-		$this->method = 'put';
-
-		if (!empty($data)) {
-			$this->setPostData($data);
-		}
-
-		return $this->exec();
-	}
-
-	/**
-	 * Make a HTTP OPTIONS call.
-	 *
-	 * @param  string $url
-	 * @param  array  $options optional - cURL options (curl_setopt_array)
-	 *
-	 * @return \anlutro\cURL\Response
-	 */
-	public function options($url, array $options = array())
-	{
-		$this->init($url, $options);
-
-		$this->method = 'options';
-
-		return $this->exec();
-	}
-
-	/**
-	 * Add a header to the request.
-	 *
-	 * @param string $value
-	 */
-	public function addHeader($value)
-	{
-		$this->headers[] = $value;
+		$this->responseClass = $class;
 	}
 
 	/**
@@ -185,50 +97,81 @@ class cURL
 	}
 
 	/**
-	 * Initialize a curl statement.
+	 * Make a new reponse object.
 	 *
-	 * @param  string $url
-	 * @param  array  $options optional - cURL options (curl_setopt_array)
+	 * @return mixed
+	 */
+	public function newRequest()
+	{
+		$class = $this->requestClass;
+		return new $class($this);
+	}
+
+	/**
+	 * Create a new response object and set its values.
+	 *
+	 * @param  string  $method  get, post, etc
+	 * @param  string  $url
+	 * @param  array   $data    POST data
+	 * @param  array   $options cURL options (curlopt_set_array)
+	 * @param  boolean $json    Whether request is JSON or not
+	 *
+	 * @return mixed
+	 */
+	public function createRequestObject($method, $url, array $data = array(), array $options = array(), $json = false)
+	{
+		$request = $this->newRequest();
+		$request->setMethod($method);
+		$request->setUrl($url);
+		$request->setData($data);
+		$request->setOptions($options);
+		$request->setJson($json);
+		return $request;
+	}
+
+	/**
+	 * Prepare the curl resource for sending a request.
+	 *
+	 * @param  Request $request
 	 *
 	 * @return void
 	 */
-	protected function init($url, $options = array())
+	public function prepareRequest(Request $request)
 	{
 		$this->ch = curl_init();
 		curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($this->ch, CURLOPT_HEADER, true);
-		curl_setopt($this->ch, CURLOPT_URL, $url);
+		curl_setopt($this->ch, CURLOPT_URL, $request->getUrl());
 
+		$options = $request->getOptions();
 		if (!empty($options)) {
 			curl_setopt_array($this->ch, $options);
 		}
-	}
 
-	/**
-	 * Set the POST data of the call.
-	 *
-	 * @param array $data
-	 */
-	protected function setPostData($data)
-	{
-		$postData = http_build_query($data);
-		curl_setopt($this->ch, CURLOPT_POSTFIELDS, $postData);
-	}
-
-	/**
-	 * Execute the prepared curl resource.
-	 *
-	 * @return \anlutro\cURL\Response
-	 */
-	protected function exec()
-	{
-		if ($this->method == 'post') {
+		$method = $request->getMethod();
+		if ($method === 'post') {
 			curl_setopt($this->ch, CURLOPT_POST, 1);
-		} elseif ($this->method !== 'get') {
-			curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, strtoupper($this->method));
+		} elseif ($method !== 'get') {
+			curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, strtoupper($method));
 		}
 
-		curl_setopt($this->ch, CURLOPT_HTTPHEADER, $this->headers);
+		curl_setopt($this->ch, CURLOPT_HTTPHEADER, $request->getHeaders());
+
+		if ($this->methods[$method] === true) {
+			curl_setopt($this->ch, CURLOPT_POSTFIELDS, $request->encodeData());
+		}
+	}
+
+	/**
+	 * Send a request.
+	 *
+	 * @param  Request $request
+	 *
+	 * @return Response
+	 */
+	public function sendRequest(Request $request)
+	{
+		$this->prepareRequest($request);
 
 		$response = $this->createResponseObject(curl_exec($this->ch));
 
@@ -243,7 +186,7 @@ class cURL
 	 *
 	 * @param  string $response
 	 *
-	 * @return void
+	 * @return Response
 	 */
 	protected function createResponseObject($response)
 	{
@@ -255,7 +198,8 @@ class cURL
 
 		$body = substr($response, $headerSize);
 
-		return new Response($body, $headers, $info);
+		$class = $this->responseClass;
+		return new $class($body, $headers, $info);
 	}
 
 	/**
@@ -285,5 +229,44 @@ class cURL
 			}
 		}
 		return $headers;
+	}
+
+	/**
+	 * Handle dynamic calls to the class.
+	 *
+	 * @param  string $method
+	 * @param  array  $args
+	 *
+	 * @return mixed
+	 */
+	public function __call($method, $args)
+	{
+		$method = strtolower($method);
+
+		$json = false;
+
+		if (substr($method, 0, 4) === 'json') {
+			$json = true;
+			$method = substr($method, 4);
+		}
+
+		if (!array_key_exists($method, $this->methods)) {
+			throw new \InvalidArgumentException("Method [$method] not a valid HTTP method.");
+		}
+
+		$url = $args[0];
+
+		$allowData = $this->methods[$method];
+		if ($allowData) {
+			$data = $args[1];
+		} else {
+			$data = array();
+		}
+
+		$options = isset($args[2]) ? $args[2] : array();
+
+		$request = $this->createRequestObject($method, $url, $data, $options, $json);
+
+		return $this->sendRequest($request);
 	}
 }
