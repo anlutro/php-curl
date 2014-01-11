@@ -113,18 +113,16 @@ class cURL
 	 * @param  string  $method  get, post, etc
 	 * @param  string  $url
 	 * @param  array   $data    POST data
-	 * @param  array   $options cURL options (curlopt_set_array)
 	 * @param  boolean $json    Whether request is JSON or not
 	 *
 	 * @return mixed
 	 */
-	public function createRequestObject($method, $url, array $data = array(), array $options = array(), $json = false)
+	public function createRequestObject($method, $url, array $data = array(), $json = false)
 	{
 		$request = $this->newRequest();
 		$request->setMethod($method);
 		$request->setUrl($url);
 		$request->setData($data);
-		$request->setOptions($options);
 		$request->setJson($json);
 		return $request;
 	}
@@ -263,9 +261,7 @@ class cURL
 			$data = array();
 		}
 
-		$options = isset($args[2]) ? $args[2] : array();
-
-		$request = $this->createRequestObject($method, $url, $data, $options, $json);
+		$request = $this->createRequestObject($method, $url, $data, $json);
 
 		return $this->sendRequest($request);
 	}

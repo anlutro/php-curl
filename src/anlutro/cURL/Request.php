@@ -78,6 +78,8 @@ class Request
 		}
 
 		$this->method = $method;
+
+		return $this;
 	}
 
 	/**
@@ -98,6 +100,8 @@ class Request
 	public function setUrl($url)
 	{
 		$this->url = $url;
+
+		return $this;
 	}
 
 	/**
@@ -118,6 +122,8 @@ class Request
 	public function setHeaders(array $headers)
 	{
 		$this->headers = $headers;
+
+		return $this;
 	}
 
 	/**
@@ -139,6 +145,8 @@ class Request
 	public function setHeader($key, $value)
 	{
 		$this->headers[$key] = $value;
+
+		return $this;
 	}
 
 	/**
@@ -161,6 +169,8 @@ class Request
 	public function setData(array $data)
 	{
 		$this->data = $data;
+
+		return $this;
 	}
 
 	/**
@@ -181,6 +191,8 @@ class Request
 	public function setOptions(array $options)
 	{
 		$this->options = $options;
+
+		return $this;
 	}
 
 	/**
@@ -225,6 +237,8 @@ class Request
 	public function setJson($toggle)
 	{
 		$this->json = (bool) $toggle;
+
+		return $this;
 	}
 
 	/**
