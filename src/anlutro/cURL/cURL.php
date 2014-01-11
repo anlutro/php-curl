@@ -109,7 +109,7 @@ class cURL
 	public function newRequest($method, $url, array $data = array(), $json = false)
 	{
 		$class = $this->requestClass;
-		return new $class($this);
+		$request = new $class($this);
 
 		$request->setMethod($method);
 		$request->setUrl($url);
@@ -163,7 +163,13 @@ class cURL
 	{
 		$this->prepareRequest($request);
 
-		$response = $this->createResponseObject(curl_exec($this->ch));
+		$result = curl_exec($this->ch);
+
+		if ($result === false) {
+			throw new \RuntimeException("cURL request failed with error: " . curl_error($this->ch));
+		}
+		
+		$response = $this->createResponseObject($result);
 
 		curl_close($this->ch);
 
@@ -189,7 +195,8 @@ class cURL
 		$body = substr($response, $headerSize);
 
 		$class = $this->responseClass;
-		return new $class($body, $headers, $info);
+		$obj = new $class($body, $headers, $info);
+		return $obj;
 	}
 
 	/**

@@ -211,7 +211,7 @@ class Request
 	 * @param string $key
 	 * @param mixed  $value
 	 */
-	public function setHeader($key, $value)
+	public function setOption($key, $value)
 	{
 		$this->options[$key] = $value;
 
@@ -225,7 +225,7 @@ class Request
 	 *
 	 * @return mixed
 	 */
-	public function getHeader($key)
+	public function getOption($key)
 	{
 		return isset($this->options[$key]) ? $this->options[$key] : null;
 	}
