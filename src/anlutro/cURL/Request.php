@@ -206,6 +206,31 @@ class Request
 	}
 
 	/**
+	 * Set a specific curl option for the request.
+	 *
+	 * @param string $key
+	 * @param mixed  $value
+	 */
+	public function setHeader($key, $value)
+	{
+		$this->options[$key] = $value;
+
+		return $this;
+	}
+
+	/**
+	 * Get a specific curl option from the request.
+	 *
+	 * @param  string $key
+	 *
+	 * @return mixed
+	 */
+	public function getHeader($key)
+	{
+		return isset($this->options[$key]) ? $this->options[$key] : null;
+	}
+
+	/**
 	 * Encode the POST data as a string.
 	 *
 	 * @return string

@@ -97,17 +97,6 @@ class cURL
 	}
 
 	/**
-	 * Make a new reponse object.
-	 *
-	 * @return mixed
-	 */
-	public function newRequest()
-	{
-		$class = $this->requestClass;
-		return new $class($this);
-	}
-
-	/**
 	 * Create a new response object and set its values.
 	 *
 	 * @param  string  $method  get, post, etc
@@ -117,13 +106,16 @@ class cURL
 	 *
 	 * @return mixed
 	 */
-	public function createRequestObject($method, $url, array $data = array(), $json = false)
+	public function newRequest($method, $url, array $data = array(), $json = false)
 	{
-		$request = $this->newRequest();
+		$class = $this->requestClass;
+		return new $class($this);
+
 		$request->setMethod($method);
 		$request->setUrl($url);
 		$request->setData($data);
 		$request->setJson($json);
+
 		return $request;
 	}
 
@@ -261,7 +253,7 @@ class cURL
 			$data = array();
 		}
 
-		$request = $this->createRequestObject($method, $url, $data, $json);
+		$request = $this->newRequest($method, $url, $data, $json);
 
 		return $this->sendRequest($request);
 	}
