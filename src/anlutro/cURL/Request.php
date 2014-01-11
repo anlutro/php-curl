@@ -263,6 +263,10 @@ class Request
 	{
 		$this->json = (bool) $toggle;
 
+		if ($this->json && !$this->getHeader('Content-Type')) {
+			$this->setHeader('Content-Type', 'application/json');
+		}
+
 		return $this;
 	}
 
