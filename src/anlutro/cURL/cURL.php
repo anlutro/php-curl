@@ -58,20 +58,25 @@ class cURL
 	/**
 	 * Make a HTTP POST call.
 	 *
-	 * @param  string $url   
+	 * @param  string $url  
+	 * @param  bool   $isJson  
 	 * @param  array  $data    optional - POST data
 	 * @param  array  $options optional - cURL options (curl_setopt_array)
 	 *
 	 * @return \anlutro\cURL\Response
 	 */
-	public function post($url, array $data = array(), array $options = array())
+	public function post($url, $isJson, array $data = array(), array $options = array())
 	{
 		$this->init($url, $options);
 
 		$this->method = 'post';
 
 		if (!empty($data)) {
-			$this->setPostData($data);
+			if($isJson){
+				curl_setopt($this->ch, CURLOPT_POSTFIELDS, json_encode($data));
+			}else{
+				$this->setPostData($data);
+			}
 		}
 
 		return $this->exec();
