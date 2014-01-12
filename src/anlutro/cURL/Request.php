@@ -151,7 +151,11 @@ class Request
 		$headers = array();
 
 		foreach ($this->headers as $key => $val) {
-			$headers[] = $key . ': ' . $val;
+			if (is_string($key)) {
+				$headers[] = $key . ': ' . $val;
+			} else {
+				$headers[] = $val;
+			}
 		}
 
 		return $headers;
