@@ -120,6 +120,20 @@ class cURL
 	}
 
 	/**
+	 * Create a new JSON request and set its values.
+	 *
+	 * @param  string $method  get, post etc
+	 * @param  string $url
+	 * @param  array  $data    POST data
+	 *
+	 * @return mixed
+	 */
+	public function newJsonRequest($method, $url, array $data = array())
+	{
+		return $this->newRequest($method, $url, $data, true);
+	}
+
+	/**
 	 * Prepare the curl resource for sending a request.
 	 *
 	 * @param  Request $request
