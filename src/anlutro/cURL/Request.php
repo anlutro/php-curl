@@ -116,6 +116,10 @@ class Request
 
 	/**
 	 * Set the headers to be sent with the request.
+	 * 
+	 * Pass an associative array - e.g. ['Content-Type' => 'application/json']
+	 * and the correct header formatting - e.g. 'Content-Type: application/json'
+	 * will be done for you when the request is sent.
 	 *
 	 * @param array $headers
 	 */
@@ -134,6 +138,23 @@ class Request
 	public function getHeaders()
 	{
 		return $this->headers;
+	}
+
+	/**
+	 * Format the headers to an array of 'key: val' which can be passed to
+	 * curl_setopt.
+	 *
+	 * @return array
+	 */
+	public function formatHeaders()
+	{
+		$headers = array();
+
+		foreach ($this->headers as $key => $val) {
+			$headers[] = $key . ': ' . $val;
+		}
+
+		return $headers[];
 	}
 
 	/**

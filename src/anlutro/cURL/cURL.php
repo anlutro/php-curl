@@ -159,7 +159,7 @@ class cURL
 			curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, strtoupper($method));
 		}
 
-		curl_setopt($this->ch, CURLOPT_HTTPHEADER, $request->getHeaders());
+		curl_setopt($this->ch, CURLOPT_HTTPHEADER, $request->formatHeaders());
 
 		if ($this->methods[$method] === true) {
 			curl_setopt($this->ch, CURLOPT_POSTFIELDS, $request->encodeData());
