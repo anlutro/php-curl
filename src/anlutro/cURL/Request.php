@@ -154,7 +154,7 @@ class Request
 			$headers[] = $key . ': ' . $val;
 		}
 
-		return $headers[];
+		return $headers;
 	}
 
 	/**
