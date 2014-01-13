@@ -24,6 +24,9 @@ $response = $curl->get($url);
 $url = $curl->buildUrl('http://api.myservice.com', ['api_key' => 'my_api_key']);
 $response = $curl->post($url, ['post' => 'data']);
 
+// add "json" to the start of the method to post as JSON
+$response = $curl->jsonPut($url, ['post' => 'data']);
+
 // a response object is returned
 var_dump($response->code); // response status code (for example, '200 OK')
 echo $response->body;
@@ -36,6 +39,7 @@ If you need to send headers or set cURL options you can manipulate a request obj
 
 ```php
 <?php
+// newRequest or newJsonRequest returns a Request object
 $result = $curl->newRequest('post', $url, ['foo' => 'bar'])
 	->setHeader('content-type', 'application/json')
 	->setHeader('Accept', 'json')
