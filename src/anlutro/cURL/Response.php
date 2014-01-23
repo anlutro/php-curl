@@ -36,39 +36,75 @@ class Response
 	public $info;
 
 	/**
-	 * The response code.
+	 * @deprecated
+	 * @see  $statusText, $statusCode
+	 */
+	public $code;
+
+	/**
+	 * The response code including text, e.g. '200 OK'.
 	 *
 	 * @var string
 	 */
-	public $code;
+	public $statusText;
+
+	/**
+	 * The response code.
+	 *
+	 * @var int
+	 */
+	public $statusCode;
 
 	/**
 	 * @param string $body
 	 * @param array  $headers
 	 * @param mixed  $info
 	 */
-	public function __construct($body, $headers, $info)
+	public function __construct($body, $headers, $info = array())
 	{
 		$this->body = $body;
 		$this->headers = $headers;
 		$this->info = $info;
 
 		if (isset($this->headers['HTTP/1.1'])) {
-			$this->code = $this->headers['HTTP/1.1'];
+			$this->setCode($this->headers['HTTP/1.1']);
+		} elseif (isset($this->headers['HTTP/1.0'])) {
+			$this->setCode($this->headers['HTTP/1.0']);
 		}
 	}
 
 	/**
-	 * Get all or a specific header from the last curl statement.
+	 * Set the response code.
 	 *
-	 * @param  string $header Name of the header to get. If not provided, gets
-	 * all headers from the last response.
+	 * @param string $code
+	 */
+	protected function setCode($code)
+	{
+		$this->code = $code;
+		$this->statusText = $code;
+		list($this->statusCode, ) = explode(' ', $code);
+	}
+
+	/**
+	 * Get a specific header from the response.
+	 *
+	 * @param  string $key
+	 *
+	 * @return mixed
+	 */
+	public function getHeader($key)
+	{
+		return array_key_exists($key, $this->headers) ? $this->headers[$key] : null;
+	}
+
+	/**
+	 * Gets all the headers of the response.
 	 *
 	 * @return array
 	 */
-	public function getHeader($header = null)
+	public function getHeaders()
 	{
-		return $header === null ? $this->headers : $this->headers[$header];
+		return $this->headers;
 	}
 
 	/**
