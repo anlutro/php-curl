@@ -38,6 +38,17 @@ class RequestTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('{"foo":"bar","bar":"baz"}', $r->encodeData());
 	}
 
+	public function testFormatHeaders()
+	{
+		$r = $this->makeRequest();
+
+		$r->setHeaders(array('foo' => 'bar', 'bar' => 'baz'));
+		$this->assertEquals(array('foo: bar', 'bar: baz'), $r->formatHeaders());
+
+		$r->setHeaders(array('foo: bar', 'bar: baz'));
+		$this->assertEquals(array('foo: bar', 'bar: baz'), $r->formatHeaders());
+	}
+
 	/**
 	 * @expectedException InvalidArgumentException
 	 */
