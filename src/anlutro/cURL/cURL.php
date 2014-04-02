@@ -101,12 +101,12 @@ class cURL
 	 *
 	 * @param  string  $method    get, post, etc
 	 * @param  string  $url
-	 * @param  array   $data      POST data
+	 * @param  mixed   $data      POST data
 	 * @param  int     $encoding  Request::ENCODING_* constant specifying how to process the POST data
 	 *
 	 * @return mixed
 	 */
-	public function newRequest($method, $url, array $data = array(), $encoding = Request::ENCODING_URL)
+	public function newRequest($method, $url, $data = array(), $encoding = Request::ENCODING_URL)
 	{
 		$class = $this->requestClass;
 		$request = new $class($this);
@@ -131,6 +131,20 @@ class cURL
 	public function newJsonRequest($method, $url, array $data = array())
 	{
 		return $this->newRequest($method, $url, $data, Request::ENCODING_JSON);
+	}
+
+	/**
+	 * Create a new raw request and set its values.
+	 *
+	 * @param  string $method  get, post etc
+	 * @param  string $url
+	 * @param  array  $data    POST data
+	 *
+	 * @return mixed
+	 */
+	public function newRawRequest($method, $url, $data = '')
+	{
+		return $this->newRequest($method, $url, $data, Request::ENCODING_RAW);
 	}
 
 	/**
@@ -259,6 +273,9 @@ class cURL
 		if (substr($method, 0, 4) === 'json') {
 			$encoding = Request::ENCODING_JSON;
 			$method = substr($method, 4);
+		} elseif (substr($method, 0, 3) === 'raw') {
+			$encoding = Request::ENCODING_RAW;
+			$method = substr($method, 3);
 		}
 
 		if (!array_key_exists($method, $this->methods)) {

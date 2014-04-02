@@ -36,6 +36,10 @@ class RequestTest extends PHPUnit_Framework_TestCase
 
 		$r->setEncoding(anlutro\cURL\Request::ENCODING_JSON);
 		$this->assertEquals('{"foo":"bar","bar":"baz"}', $r->encodeData());
+
+		$r->setEncoding(anlutro\cURL\Request::ENCODING_RAW);
+		$r->setData('<rawData>ArbitraryValue</rawData>');
+		$this->assertEquals('<rawData>ArbitraryValue</rawData>', $r->encodeData());
 	}
 
 	public function testJsonConvenienceMethod()

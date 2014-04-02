@@ -19,6 +19,7 @@ class Request
 	 */
 	const ENCODING_URL = 0;
 	const ENCODING_JSON = 1;
+	const ENCODING_RAW = 3;
 
 	/**
 	 * The HTTP method to use. Defaults to GET.
@@ -195,9 +196,9 @@ class Request
 	/**
 	 * Set the POST data to be sent with the request.
 	 *
-	 * @param array $data
+	 * @param mixed $data
 	 */
-	public function setData(array $data)
+	public function setData($data)
 	{
 		$this->data = $data;
 
@@ -273,6 +274,10 @@ class Request
 				return json_encode($this->data);
 				break;
 
+			case Request::ENCODING_RAW:
+				return (string)$this->data;
+				break;
+
 			case Request::ENCODING_URL:
 			default:
 				return http_build_query($this->data);
@@ -299,6 +304,7 @@ class Request
 	{
 		$encoding = intval($encoding);
 		switch( $encoding ){
+			case Request::ENCODING_RAW:
 			case Request::ENCODING_URL:
 				$this->encoding = $encoding;
 				break;
