@@ -15,6 +15,12 @@ namespace anlutro\cURL;
 class Request
 {
 	/**
+	 * ENCODING_* constants, used for specifying encoding options
+	 */
+	const ENCODING_URL = 0;
+	const ENCODING_JSON = 1;
+
+	/**
 	 * The HTTP method to use. Defaults to GET.
 	 *
 	 * @var string
@@ -50,11 +56,11 @@ class Request
 	private $options = array();
 
 	/**
-	 * Whether the response is JSON or not.
+	 * The type of processing to perform to encode the POST data
 	 *
 	 * @var boolean
 	 */
-	private $json = false;
+	private $encoding = Request::ENCODING_URL;
 
 	/**
 	 * @param cURL $curl
@@ -262,10 +268,15 @@ class Request
 	 */
 	public function encodeData()
 	{
-		if ($this->json) {
-			return json_encode($this->data);
-		} else {
-			return http_build_query($this->data);
+		switch( $this->encoding ){
+			case Request::ENCODING_JSON:
+				return json_encode($this->data);
+				break;
+
+			case Request::ENCODING_URL:
+			default:
+				return http_build_query($this->data);
+				break;
 		}
 	}
 
@@ -276,7 +287,42 @@ class Request
 	 */
 	public function isJson()
 	{
-		return $this->json === true;
+		return $this->encoding === Request::ENCODING_JSON;
+	}
+
+	/**
+	* Set the encoding to use on the POST data, and (possibly) associated Content-Type headers
+	*
+	* @param $encoding  a Request::ENCODING_* constant
+	*/
+	public function setEncoding($encoding)
+	{
+		$encoding = intval($encoding);
+		switch( $encoding ){
+			case Request::ENCODING_URL:
+				$this->encoding = $encoding;
+				break;
+			case Request::ENCODING_JSON:
+				$this->encoding = $encoding;
+				if ($this->isJson() && !$this->getHeader('Content-Type')) {
+					$this->setHeader('Content-Type', 'application/json');
+				}
+				break;
+			default:
+				throw new \InvalidArgumentException(
+					"Encoding [$encoding] not a known Request::ENCODING_* constant"
+				);
+		}
+
+		return $this;
+	}
+
+	/**
+	* Get the current encoding which will be used on the POST data
+	*/
+	public function getEncoding()
+	{
+		return $this->encoding;
 	}
 
 	/**
@@ -286,11 +332,7 @@ class Request
 	 */
 	public function setJson($toggle)
 	{
-		$this->json = (bool) $toggle;
-
-		if ($this->json && !$this->getHeader('Content-Type')) {
-			$this->setHeader('Content-Type', 'application/json');
-		}
+		$this->setEncoding( $toggle ? Request::ENCODING_JSON : Request::ENCODING_URL );
 
 		return $this;
 	}

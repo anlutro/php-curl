@@ -99,14 +99,14 @@ class cURL
 	/**
 	 * Create a new response object and set its values.
 	 *
-	 * @param  string  $method  get, post, etc
+	 * @param  string  $method    get, post, etc
 	 * @param  string  $url
-	 * @param  array   $data    POST data
-	 * @param  boolean $json    Whether request is JSON or not
+	 * @param  array   $data      POST data
+	 * @param  int     $encoding  Request::ENCODING_* constant specifying how to process the POST data
 	 *
 	 * @return mixed
 	 */
-	public function newRequest($method, $url, array $data = array(), $json = false)
+	public function newRequest($method, $url, array $data = array(), $encoding = Request::ENCODING_URL)
 	{
 		$class = $this->requestClass;
 		$request = new $class($this);
@@ -114,7 +114,7 @@ class cURL
 		$request->setMethod($method);
 		$request->setUrl($url);
 		$request->setData($data);
-		$request->setJson($json);
+		$request->setEncoding($encoding);
 
 		return $request;
 	}
@@ -130,7 +130,7 @@ class cURL
 	 */
 	public function newJsonRequest($method, $url, array $data = array())
 	{
-		return $this->newRequest($method, $url, $data, true);
+		return $this->newRequest($method, $url, $data, Request::ENCODING_JSON);
 	}
 
 	/**
@@ -254,10 +254,10 @@ class cURL
 	{
 		$method = strtolower($method);
 
-		$json = false;
+		$encoding = Request::ENCODING_URL;
 
 		if (substr($method, 0, 4) === 'json') {
-			$json = true;
+			$encoding = Request::ENCODING_JSON;
 			$method = substr($method, 4);
 		}
 
@@ -274,7 +274,7 @@ class cURL
 			$data = array();
 		}
 
-		$request = $this->newRequest($method, $url, $data, $json);
+		$request = $this->newRequest($method, $url, $data, $encoding);
 
 		return $this->sendRequest($request);
 	}
