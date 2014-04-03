@@ -17,7 +17,7 @@ class Request
 	/**
 	 * ENCODING_* constants, used for specifying encoding options
 	 */
-	const ENCODING_URL = 0;
+	const ENCODING_QUERY = 0;
 	const ENCODING_JSON = 1;
 	const ENCODING_RAW = 3;
 
@@ -61,7 +61,7 @@ class Request
 	 *
 	 * @var boolean
 	 */
-	private $encoding = Request::ENCODING_URL;
+	private $encoding = Request::ENCODING_QUERY;
 
 	/**
 	 * @param cURL $curl
@@ -278,7 +278,7 @@ class Request
 				return (string)$this->data;
 				break;
 
-			case Request::ENCODING_URL:
+			case Request::ENCODING_QUERY:
 			default:
 				return http_build_query($this->data);
 				break;
@@ -305,7 +305,7 @@ class Request
 		$encoding = intval($encoding);
 		switch( $encoding ){
 			case Request::ENCODING_RAW:
-			case Request::ENCODING_URL:
+			case Request::ENCODING_QUERY:
 				$this->encoding = $encoding;
 				break;
 			case Request::ENCODING_JSON:
@@ -338,7 +338,7 @@ class Request
 	 */
 	public function setJson($toggle)
 	{
-		$this->setEncoding( $toggle ? Request::ENCODING_JSON : Request::ENCODING_URL );
+		$this->setEncoding( $toggle ? Request::ENCODING_JSON : Request::ENCODING_QUERY );
 
 		return $this;
 	}

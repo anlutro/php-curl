@@ -106,7 +106,7 @@ class cURL
 	 *
 	 * @return mixed
 	 */
-	public function newRequest($method, $url, $data = array(), $encoding = Request::ENCODING_URL)
+	public function newRequest($method, $url, $data = array(), $encoding = Request::ENCODING_QUERY)
 	{
 		$class = $this->requestClass;
 		$request = new $class($this);
@@ -268,7 +268,7 @@ class cURL
 	{
 		$method = strtolower($method);
 
-		$encoding = Request::ENCODING_URL;
+		$encoding = Request::ENCODING_QUERY;
 
 		if (substr($method, 0, 4) === 'json') {
 			$encoding = Request::ENCODING_JSON;
