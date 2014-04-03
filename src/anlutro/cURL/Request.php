@@ -19,7 +19,7 @@ class Request
 	 */
 	const ENCODING_QUERY = 0;
 	const ENCODING_JSON = 1;
-	const ENCODING_RAW = 3;
+	const ENCODING_RAW = 2;
 
 	/**
 	 * The HTTP method to use. Defaults to GET.
