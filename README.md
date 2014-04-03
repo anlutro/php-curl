@@ -27,6 +27,9 @@ $response = $curl->post($url, ['post' => 'data']);
 // add "json" to the start of the method to post as JSON
 $response = $curl->jsonPut($url, ['post' => 'data']);
 
+// add "raw" to the start of the method to post raw data
+$response = $curl->rawPost($url, '<?xml version...');
+
 // a response object is returned
 var_dump($response->code); // response status code (for example, '200 OK')
 echo $response->body;

@@ -34,8 +34,20 @@ class RequestTest extends PHPUnit_Framework_TestCase
 		$r->setData(array('foo' => 'bar', 'bar' => 'baz'));
 		$this->assertEquals('foo=bar&bar=baz', $r->encodeData());
 
-		$r->setJson(true);
+		$r->setEncoding(anlutro\cURL\Request::ENCODING_JSON);
 		$this->assertEquals('{"foo":"bar","bar":"baz"}', $r->encodeData());
+
+		$r->setEncoding(anlutro\cURL\Request::ENCODING_RAW);
+		$r->setData('<rawData>ArbitraryValue</rawData>');
+		$this->assertEquals('<rawData>ArbitraryValue</rawData>', $r->encodeData());
+	}
+
+	public function testJsonConvenienceMethod()
+	{
+		$r = $this->makeRequest();
+
+		$r->setJson(true);
+		$this->assertEquals(anlutro\cURL\Request::ENCODING_JSON, $r->getEncoding());
 	}
 
 	public function testFormatHeaders()
@@ -57,6 +69,16 @@ class RequestTest extends PHPUnit_Framework_TestCase
 		$r = $this->makeRequest();
 
 		$r->setMethod('foo');
+	}
+
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testInvalidEncoding()
+	{
+		$r = $this->makeRequest();
+
+		$r->setEncoding(999);
 	}
 
 	public function makeRequest($curl = null)
