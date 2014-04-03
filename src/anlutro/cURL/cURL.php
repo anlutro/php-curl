@@ -285,7 +285,7 @@ class cURL
 		$url = $args[0];
 
 		$allowData = $this->methods[$method];
-		if ($allowData) {
+		if ($allowData && isset($args[1])) {
 			$data = $args[1];
 		} else {
 			$data = array();

@@ -1,11 +1,11 @@
 <?php
 class cURLTest extends PHPUnit_Framework_TestCase
 {
-	public function testPhpNet()
+	public function testRealWebsite()
 	{
 		$curl = $this->makeCurl();
 
-		$r = $curl->get('https://www.php.net');
+		$r = $curl->get('http://lutro.priv.no');
 
 		$this->assertEquals('200 OK', $r->code);
 		$this->assertNotNull($r->body);
@@ -20,7 +20,7 @@ class cURLTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('get', $r->getMethod());
 		$this->assertEquals('https://www.php.net', $r->getUrl());
 		$this->assertEquals(array('foo' => 'bar'), $r->getData());
-		$this->assertEquals(\anlutro\cURL\Request::ENCODING_URL, $r->getEncoding());
+		$this->assertEquals(\anlutro\cURL\Request::ENCODING_QUERY, $r->getEncoding());
 
 		$r = $curl->newJsonRequest('get', 'https://www.php.net', array('foo' => 'bar'));
 		$this->assertEquals('get', $r->getMethod());

@@ -269,24 +269,26 @@ class Request
 	 */
 	public function encodeData()
 	{
-		switch( $this->encoding ){
+		switch ($this->encoding) {
 			case Request::ENCODING_JSON:
 				return json_encode($this->data);
 				break;
 
 			case Request::ENCODING_RAW:
-				return (string)$this->data;
+				return (string) $this->data;
 				break;
 
 			case Request::ENCODING_QUERY:
-			default:
 				return http_build_query($this->data);
 				break;
+
+			default:
+				throw new \UnexpectedValueException("Encoding [$encoding] not a known Request::ENCODING_* constant");
 		}
 	}
 
 	/**
-	 * Whether the response is JSON or not.
+	 * Whether the request is JSON or not.
 	 *
 	 * @return boolean
 	 */
@@ -298,27 +300,21 @@ class Request
 	/**
 	* Set the encoding to use on the POST data, and (possibly) associated Content-Type headers
 	*
-	* @param $encoding  a Request::ENCODING_* constant
+	* @param int  $encoding  a Request::ENCODING_* constant
 	*/
 	public function setEncoding($encoding)
 	{
 		$encoding = intval($encoding);
-		switch( $encoding ){
-			case Request::ENCODING_RAW:
-			case Request::ENCODING_QUERY:
-				$this->encoding = $encoding;
-				break;
-			case Request::ENCODING_JSON:
-				$this->encoding = $encoding;
-				if ($this->isJson() && !$this->getHeader('Content-Type')) {
-					$this->setHeader('Content-Type', 'application/json');
-				}
-				break;
-			default:
-				throw new \InvalidArgumentException(
-					"Encoding [$encoding] not a known Request::ENCODING_* constant"
-				);
+
+		if ($encoding !== REQUEST::ENCODING_QUERY && $encoding !== REQUEST::ENCODING_JSON && $encoding !== REQUEST::ENCODING_RAW) {
+			throw new \InvalidArgumentException("Encoding [$encoding] not a known Request::ENCODING_* constant");
 		}
+
+		if ($encoding === Request::ENCODING_JSON && !$this->getHeader('Content-Type')) {
+			$this->setHeader('Content-Type', 'application/json');
+		}
+
+		$this->encoding = $encoding;
 
 		return $this;
 	}
@@ -335,10 +331,12 @@ class Request
 	 * Set whether the response should be JSON or not.
 	 *
 	 * @param boolean $toggle
+	 *
+	 * @deprecated Use setEncoding(Request::ENCODING_JSON)
 	 */
 	public function setJson($toggle)
 	{
-		$this->setEncoding( $toggle ? Request::ENCODING_JSON : Request::ENCODING_QUERY );
+		$this->setEncoding($toggle ? Request::ENCODING_JSON : Request::ENCODING_QUERY);
 
 		return $this;
 	}
