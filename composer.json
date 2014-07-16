@@ -12,12 +12,16 @@
         "php": ">=5.3.0"
     },
     "require-dev": {
-        "mockery/mockery": "dev-master"
+        "mockery/mockery": "0.9.*"
     },
     "autoload": {
-        "psr-0": {
-            "anlutro\\cURL": "src/"
+        "psr-4": {
+            "anlutro\\cURL\\": "src/"
         }
     },
-    "minimum-stability": "dev"
+    "config": {
+        "preferred-install": "dist" 
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

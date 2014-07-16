@@ -1,6 +1,8 @@
 <?php
+namespace anlutro\cURL\Tests;
 
-use Mockery as m;
+use PHPUnit_Framework_TestCase;
+use anlutro\cURL\Request;
 
 class RequestTest extends PHPUnit_Framework_TestCase
 {
@@ -34,10 +36,10 @@ class RequestTest extends PHPUnit_Framework_TestCase
 		$r->setData(array('foo' => 'bar', 'bar' => 'baz'));
 		$this->assertEquals('foo=bar&bar=baz', $r->encodeData());
 
-		$r->setEncoding(anlutro\cURL\Request::ENCODING_JSON);
+		$r->setEncoding(Request::ENCODING_JSON);
 		$this->assertEquals('{"foo":"bar","bar":"baz"}', $r->encodeData());
 
-		$r->setEncoding(anlutro\cURL\Request::ENCODING_RAW);
+		$r->setEncoding(Request::ENCODING_RAW);
 		$r->setData('<rawData>ArbitraryValue</rawData>');
 		$this->assertEquals('<rawData>ArbitraryValue</rawData>', $r->encodeData());
 	}
@@ -47,7 +49,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
 		$r = $this->makeRequest();
 
 		$r->setJson(true);
-		$this->assertEquals(anlutro\cURL\Request::ENCODING_JSON, $r->getEncoding());
+		$this->assertEquals(Request::ENCODING_JSON, $r->getEncoding());
 	}
 
 	public function testFormatHeaders()
@@ -83,11 +85,6 @@ class RequestTest extends PHPUnit_Framework_TestCase
 
 	public function makeRequest($curl = null)
 	{
-		if ($curl === null) {
-			// $curl = m::mock('anlutro\cURL\cURL');
-			$curl = new anlutro\cURL\cURL;
-		}
-
-		return new anlutro\cURL\Request($curl);
+		return new Request($curl ?: new \anlutro\cURL\cURL);
 	}
 }

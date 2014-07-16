@@ -1,4 +1,9 @@
 <?php
+namespace anlutro\cURL\Tests;
+
+use PHPUnit_Framework_TestCase;
+use anlutro\cURL\Request;
+
 class cURLTest extends PHPUnit_Framework_TestCase
 {
 	public function testRealWebsite()
@@ -20,19 +25,19 @@ class cURLTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('get', $r->getMethod());
 		$this->assertEquals('https://www.php.net', $r->getUrl());
 		$this->assertEquals(array('foo' => 'bar'), $r->getData());
-		$this->assertEquals(\anlutro\cURL\Request::ENCODING_QUERY, $r->getEncoding());
+		$this->assertEquals(Request::ENCODING_QUERY, $r->getEncoding());
 
 		$r = $curl->newJsonRequest('get', 'https://www.php.net', array('foo' => 'bar'));
 		$this->assertEquals('get', $r->getMethod());
 		$this->assertEquals('https://www.php.net', $r->getUrl());
 		$this->assertEquals(array('foo' => 'bar'), $r->getData());
-		$this->assertEquals(\anlutro\cURL\Request::ENCODING_JSON, $r->getEncoding());
+		$this->assertEquals(Request::ENCODING_JSON, $r->getEncoding());
 
 		$r = $curl->newRawRequest('get', 'https://www.php.net', array('foo' => 'bar'));
 		$this->assertEquals('get', $r->getMethod());
 		$this->assertEquals('https://www.php.net', $r->getUrl());
 		$this->assertEquals(array('foo' => 'bar'), $r->getData());
-		$this->assertEquals(\anlutro\cURL\Request::ENCODING_RAW, $r->getEncoding());
+		$this->assertEquals(Request::ENCODING_RAW, $r->getEncoding());
 	}
 
 	public function makeCurl()
