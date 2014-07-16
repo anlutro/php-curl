@@ -5,7 +5,7 @@ class cURLTest extends PHPUnit_Framework_TestCase
 	{
 		$curl = $this->makeCurl();
 
-		$r = $curl->get('http://lutro.priv.no');
+		$r = $curl->get('http://www.lutro.priv.no');
 
 		$this->assertEquals('200 OK', $r->code);
 		$this->assertNotNull($r->body);

@@ -59,7 +59,7 @@ class Request
 	/**
 	 * The type of processing to perform to encode the POST data
 	 *
-	 * @var boolean
+	 * @var int
 	 */
 	private $encoding = Request::ENCODING_QUERY;
 
@@ -272,15 +272,12 @@ class Request
 		switch ($this->encoding) {
 			case Request::ENCODING_JSON:
 				return json_encode($this->data);
-				break;
 
 			case Request::ENCODING_RAW:
 				return (string) $this->data;
-				break;
 
 			case Request::ENCODING_QUERY:
 				return http_build_query($this->data);
-				break;
 
 			default:
 				throw new \UnexpectedValueException("Encoding [$encoding] not a known Request::ENCODING_* constant");

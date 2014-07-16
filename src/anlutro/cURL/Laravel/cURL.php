@@ -18,6 +18,6 @@ class cURL extends Facade
 {
 	public static function getFacadeAccessor()
 	{
-		return 'curl';
+		return 'anlutro\cURL\cURL';
 	}
 }

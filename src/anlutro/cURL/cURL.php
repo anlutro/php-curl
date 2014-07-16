@@ -194,9 +194,11 @@ class cURL
 		$result = curl_exec($this->ch);
 
 		if ($result === false) {
-			throw new \RuntimeException("cURL request failed with error: " . curl_error($this->ch));
+			$exception = new \RuntimeException("cURL request failed with error: " . curl_error($this->ch));
+			curl_close($this->ch);
+			throw $exception;
 		}
-		
+
 		$response = $this->createResponseObject($result);
 
 		curl_close($this->ch);
@@ -224,6 +226,7 @@ class cURL
 
 		$class = $this->responseClass;
 		$obj = new $class($body, $headers, $info);
+
 		return $obj;
 	}
 
@@ -238,6 +241,7 @@ class cURL
 	{
 		$tmp = explode("\r\n", $header);
 		$headers = array();
+
 		foreach ($tmp as $singleHeader) {
 			$delimiter = strpos($singleHeader, ': ');
 			if ($delimiter !== false) {
@@ -253,6 +257,7 @@ class cURL
 				}
 			}
 		}
+
 		return $headers;
 	}
 
