@@ -274,7 +274,7 @@ class Request
 				return json_encode($this->data);
 
 			case Request::ENCODING_RAW:
-				return (string) $this->data;
+				return $this->data;
 
 			case Request::ENCODING_QUERY:
 				return http_build_query($this->data);
