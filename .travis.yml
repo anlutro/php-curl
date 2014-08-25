@@ -11,8 +11,6 @@ matrix:
   allow_failures:
     - php: hhvm
 
-before_script:
-  - curl -s http://getcomposer.org/installer | php
-  - php composer.phar install --dev
+install: composer install --dev --prefer-dist
 
 script: phpunit
