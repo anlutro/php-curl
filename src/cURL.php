@@ -159,6 +159,9 @@ class cURL
 		$this->ch = curl_init();
 		curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($this->ch, CURLOPT_HEADER, true);
+        if($request->getUserAndPass()) {
+		    curl_setopt($this->ch, CURLOPT_USERPWD, $request->getUserAndPass());
+        }
 		curl_setopt($this->ch, CURLOPT_URL, $request->getUrl());
 
 		$options = $request->getOptions();

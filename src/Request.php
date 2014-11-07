@@ -57,6 +57,20 @@ class Request
 	private $options = array();
 
 	/**
+	 * Username to authenticate the request of cURL.
+	 *
+	 * @var array
+	 */
+	private $user = '';
+
+	/**
+	 * Password to authenticate the request of cURL.
+	 *
+	 * @var array
+	 */
+	private $pass = '';
+
+	/**
 	 * The type of processing to perform to encode the POST data
 	 *
 	 * @var int
@@ -261,6 +275,46 @@ class Request
 	{
 		return isset($this->options[$key]) ? $this->options[$key] : null;
 	}
+
+	/**
+	 * Set an username to authenticate the request of curl.
+	 *
+	 * @param  string $user
+	 *
+	 * @return mixed
+	 */
+	public function setUser($user)
+	{
+        $this->user = $user;
+        return $this;
+	}
+
+    /**
+     * Set a password to authenticate the request of curl.
+     *
+     * @param  string $pass
+     *
+     * @return mixed
+     */
+	public function setPass($pass)
+	{
+        $this->pass = $pass;
+        return $this;
+	}
+
+    /**
+     * Get the concatenated value for User:Pass to authenticate the request of curl.
+     *
+     * @return mixed
+     */
+    public function getUserAndPass()
+    {
+        if($this->user && $this->pass) {
+            return $this->user . ':' . $this->pass;
+        }
+        return false;
+    }
+
 
 	/**
 	 * Encode the POST data as a string.
