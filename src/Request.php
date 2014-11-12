@@ -285,36 +285,39 @@ class Request
 	 */
 	public function setUser($user)
 	{
-        $this->user = $user;
-        return $this;
+		$this->user = $user;
+
+		return $this;
 	}
 
-    /**
-     * Set a password to authenticate the request of curl.
-     *
-     * @param  string $pass
-     *
-     * @return mixed
-     */
+	/**
+	 * Set a password to authenticate the request of curl.
+	 *
+	 * @param  string $pass
+	 *
+	 * @return mixed
+	 */
 	public function setPass($pass)
 	{
-        $this->pass = $pass;
-        return $this;
+		$this->pass = $pass;
+
+		return $this;
 	}
 
-    /**
-     * Get the concatenated value for User:Pass to authenticate the request of curl.
-     *
-     * @return mixed
-     */
-    public function getUserAndPass()
-    {
-        if($this->user && $this->pass) {
-            return $this->user . ':' . $this->pass;
-        }
-        return false;
-    }
+	/**
+	 * If username and password is set, returns a string of 'username:password'.
+	 * If not, returns null.
+	 *
+	 * @return string|null
+	 */
+	public function getUserAndPass()
+	{
+		if ($this->user && $this->pass) {
+			return $this->user . ':' . $this->pass;
+		}
 
+		return null;
+	}
 
 	/**
 	 * Encode the POST data as a string.
