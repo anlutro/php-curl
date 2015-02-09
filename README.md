@@ -2,9 +2,7 @@
 
 ## Installation
 
-https://packagist.org/packages/anlutro/curl
-
-`composer require anlutro/curl` - pick the latest version number from Packagist or the GitHub tag list.
+	$ composer require anlutro/curl
 
 Note that while on version 0.x I will not guarantee backwards compatibility between minor versions. Specify the version in your composer.json if you don't want/need to keep up with new features, or use a more mature library.
 
@@ -42,7 +40,7 @@ If you need to send headers or set cURL options you can manipulate a request obj
 
 ```php
 <?php
-// newRequest or newJsonRequest returns a Request object
+// newRequest, newJsonRequest and newRawRequest returns a Request object
 $result = $curl->newRequest('post', $url, ['foo' => 'bar'])
 	->setHeader('content-type', 'application/json')
 	->setHeader('Accept', 'json')
@@ -51,11 +49,18 @@ $result = $curl->newRequest('post', $url, ['foo' => 'bar'])
 ?>
 ```
 
-## Laravel Service Provider
-cURL comes with a Laravel service provider and facade.
+### Laravel
 
-Add `anlutro\cURL\Laravel\cURLServiceProvider` to the array of providers in `app/config/app.php`.
+The package comes with a facade you can use if you prefer the static method calls.
 
-Optionally, add `'cURL' => 'anlutro\cURL\Laravel\cURL'` to the array of aliases in the same file.
+Optionally, add `'cURL' => 'anlutro\cURL\Laravel\cURL'` to the array of aliases in `config/app.php`.
 
 Replace `$curl->` with `cURL::` in the examples above.
+
+## Contact
+
+Open an issue on GitHub if you have any problems or suggestions.
+
+## License
+
+The contents of this repository is released under the [MIT license](http://opensource.org/licenses/MIT).

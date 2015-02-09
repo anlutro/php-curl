@@ -138,7 +138,7 @@ class cURL
 	 *
 	 * @param  string $method  get, post etc
 	 * @param  string $url
-	 * @param  array  $data    POST data
+	 * @param  mixed  $data    request body
 	 *
 	 * @return mixed
 	 */
@@ -159,9 +159,9 @@ class cURL
 		$this->ch = curl_init();
 		curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($this->ch, CURLOPT_HEADER, true);
-        if($request->getUserAndPass()) {
-		    curl_setopt($this->ch, CURLOPT_USERPWD, $request->getUserAndPass());
-        }
+		if ($auth = $request->getUserAndPass()) {
+			curl_setopt($this->ch, CURLOPT_USERPWD, $auth);
+		}
 		curl_setopt($this->ch, CURLOPT_URL, $request->getUrl());
 
 		$options = $request->getOptions();
