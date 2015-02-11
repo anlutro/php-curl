@@ -4,7 +4,7 @@
 
 	$ composer require anlutro/curl
 
-Note that while on version 0.x I will not guarantee backwards compatibility between minor versions. Specify the version in your composer.json if you don't want/need to keep up with new features, or use a more mature library.
+Note that while on version 0.x I will not guarantee backwards compatibility between minor versions. Specify the version in your composer.json if you don't want/need to keep up with new features, or use a more mature library like [Guzzle](https://github.com/guzzle/guzzle).
 
 ## Usage
 
