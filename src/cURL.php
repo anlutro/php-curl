@@ -106,36 +106,32 @@ class cURL
 	 */
 	public function buildUrl($url, array $query)
 	{
-		// append the query string
 		if (empty($query)) {
 			return $url;
 		}
 
-		$coms = parse_url($url);
-		$queryString = "";
-		if (isset($coms["query"]) && strlen($coms["query"])) {
-			$queryString .= $coms["query"] . "&" . http_build_query($query);
-		}
-		else {
+		$parts = parse_url($url);
+
+		$queryString = '';
+		if (isset($parts['query']) && $parts['query']) {
+			$queryString .= $parts['query'].'&'.http_build_query($query);
+		} else {
 			$queryString .= http_build_query($query);
 		}
 
-		$retUrl = $coms["scheme"] . "://" . $coms["host"];
-		if (isset($coms["port"])) {
-			$retUrl .= ":" . $coms["port"];
+		$retUrl = $parts['scheme'].'://'.$parts['host'];
+		if (isset($parts['port'])) {
+			$retUrl .= ':'.$parts['port'];
 		}
 
-		if (isset($coms["path"])) {
-			$retUrl .= $coms["path"];
+		if (isset($parts['path'])) {
+			$retUrl .= $parts['path'];
 		}
 
 		if ($queryString) {
-			$retUrl .= "?" . $queryString;
+			$retUrl .= '?' . $queryString;
 		}
 
-		if (isset($coms["fragment"])) {
-			$retUrl .= "#" . $coms["fragment"];
-		}
 		return $retUrl;
 	}
 
