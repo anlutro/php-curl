@@ -327,15 +327,12 @@ class Request
 	public function encodeData()
 	{
 		switch ($this->encoding) {
-			case Request::ENCODING_JSON:
+			case static::ENCODING_JSON:
 				return json_encode($this->data);
-
-			case Request::ENCODING_RAW:
-				return $this->data;
-
-			case Request::ENCODING_QUERY:
+			case static::ENCODING_QUERY:
 				return http_build_query($this->data);
-
+			case static::ENCODING_RAW:
+				return $this->data;
 			default:
 				throw new \UnexpectedValueException("Encoding [$encoding] not a known Request::ENCODING_* constant");
 		}
@@ -348,7 +345,7 @@ class Request
 	 */
 	public function isJson()
 	{
-		return $this->encoding === Request::ENCODING_JSON;
+		return $this->encoding === static::ENCODING_JSON;
 	}
 
 	/**
@@ -360,11 +357,15 @@ class Request
 	{
 		$encoding = intval($encoding);
 
-		if ($encoding !== REQUEST::ENCODING_QUERY && $encoding !== REQUEST::ENCODING_JSON && $encoding !== REQUEST::ENCODING_RAW) {
+		if (
+			$encoding !== static::ENCODING_QUERY &&
+			$encoding !== static::ENCODING_JSON &&
+			$encoding !== static::ENCODING_RAW
+		) {
 			throw new \InvalidArgumentException("Encoding [$encoding] not a known Request::ENCODING_* constant");
 		}
 
-		if ($encoding === Request::ENCODING_JSON && !$this->getHeader('Content-Type')) {
+		if ($encoding === static::ENCODING_JSON && !$this->getHeader('Content-Type')) {
 			$this->setHeader('Content-Type', 'application/json');
 		}
 
@@ -379,20 +380,6 @@ class Request
 	public function getEncoding()
 	{
 		return $this->encoding;
-	}
-
-	/**
-	 * Set whether the response should be JSON or not.
-	 *
-	 * @param boolean $toggle
-	 *
-	 * @deprecated Use setEncoding(Request::ENCODING_JSON)
-	 */
-	public function setJson($toggle)
-	{
-		$this->setEncoding($toggle ? Request::ENCODING_JSON : Request::ENCODING_QUERY);
-
-		return $this;
 	}
 
 	/**

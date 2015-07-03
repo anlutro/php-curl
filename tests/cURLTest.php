@@ -12,7 +12,8 @@ class cURLTest extends PHPUnit_Framework_TestCase
 
 		$r = $curl->get('http://php.net');
 
-		$this->assertEquals('200 OK', $r->code);
+		$this->assertEquals(200, $r->statusCode);
+		$this->assertEquals('200 OK', $r->statusText);
 		$this->assertNotNull($r->body);
 		$this->assertNotNull($r->headers);
 		$this->assertNotNull($r->info);

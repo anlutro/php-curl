@@ -44,14 +44,6 @@ class RequestTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('<rawData>ArbitraryValue</rawData>', $r->encodeData());
 	}
 
-	public function testJsonConvenienceMethod()
-	{
-		$r = $this->makeRequest();
-
-		$r->setJson(true);
-		$this->assertEquals(Request::ENCODING_JSON, $r->getEncoding());
-	}
-
 	public function testFormatHeaders()
 	{
 		$r = $this->makeRequest();

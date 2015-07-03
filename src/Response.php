@@ -36,12 +36,6 @@ class Response
 	public $info;
 
 	/**
-	 * @deprecated
-	 * @see  $statusText, $statusCode
-	 */
-	public $code;
-
-	/**
 	 * The response code including text, e.g. '200 OK'.
 	 *
 	 * @var string
@@ -80,7 +74,6 @@ class Response
 	 */
 	protected function setCode($code)
 	{
-		$this->code = $code;
 		$this->statusText = $code;
 		list($this->statusCode, ) = explode(' ', $code);
 	}
