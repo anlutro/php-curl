@@ -19,6 +19,13 @@ class cURLTest extends PHPUnit_Framework_TestCase
 		$this->assertNotNull($r->info);
 	}
 
+	public function testThrowsExceptionOnCurlError()
+	{
+		$this->setExpectedException('anlutro\cURL\cURLException', 'cURL request failed '.
+			'with error [7]: Failed to connect to 0.0.0.0 port 80: Connection refused');
+		$this->makeCurl()->get('http://0.0.0.0');
+	}
+
 	public function testConvenienceBuilders()
 	{
 		$curl = $this->makeCurl();

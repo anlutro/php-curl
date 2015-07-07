@@ -236,9 +236,11 @@ class cURL
 		$result = curl_exec($this->ch);
 
 		if ($result === false) {
-			$exception = new \RuntimeException("cURL request failed with error: " . curl_error($this->ch));
+			$errno = curl_errno($this->ch);
+			$errmsg = curl_error($this->ch);
+			$msg = "cURL request failed with error [$errno]: $errmsg";
 			curl_close($this->ch);
-			throw $exception;
+			throw new cURLException($msg, $errno);
 		}
 
 		$response = $this->createResponseObject($result);
