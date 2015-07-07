@@ -17,3 +17,5 @@ matrix:
 install: composer install --dev --prefer-dist
 
 script: phpunit
+
+sudo: false
