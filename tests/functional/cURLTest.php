@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @group server
+ */
 class cURLTest extends PHPUnit_Framework_TestCase
 {
 	const URL = 'http://localhost:8080';
