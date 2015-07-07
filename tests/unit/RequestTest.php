@@ -1,24 +1,28 @@
 <?php
-namespace anlutro\cURL\Tests;
 
-use PHPUnit_Framework_TestCase;
 use anlutro\cURL\Request;
 
 class RequestTest extends PHPUnit_Framework_TestCase
 {
-	public function testSettersAndGetters()
+	private function makeRequest($curl = null)
+	{
+		return new Request($curl ?: new \anlutro\cURL\cURL);
+	}
+
+	/** @test */
+	public function settersAndGetters()
 	{
 		$r = $this->makeRequest();
 
 		$r->setUrl('foo');
 		$this->assertEquals('foo', $r->getUrl());
-		
+
 		$r->setMethod('post');
 		$this->assertEquals('post', $r->getMethod());
-		
+
 		$r->setData(array('foo' => 'bar'));
 		$this->assertEquals(array('foo' => 'bar'), $r->getData());
-		
+
 		$r->setOptions(array('bar' => 'baz'));
 		$this->assertEquals(array('bar' => 'baz'), $r->getOptions());
 
@@ -29,7 +33,8 @@ class RequestTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(array('baz' => 'foo', 'bar' => 'baz'), $r->getHeaders());
 	}
 
-	public function testEncodeData()
+	/** @test */
+	public function encodeData()
 	{
 		$r = $this->makeRequest();
 
@@ -44,7 +49,8 @@ class RequestTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('<rawData>ArbitraryValue</rawData>', $r->encodeData());
 	}
 
-	public function testFormatHeaders()
+	/** @test */
+	public function formatHeaders()
 	{
 		$r = $this->makeRequest();
 
@@ -56,23 +62,21 @@ class RequestTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * @test
 	 * @expectedException InvalidArgumentException
 	 */
-	public function testInvalidMethod()
+	public function invalidMethod()
 	{
-		$r = $this->makeRequest();
-
-		$r->setMethod('foo');
+		$this->makeRequest()->setMethod('foo');
 	}
 
 	/**
+	 * @test
 	 * @expectedException InvalidArgumentException
 	 */
-	public function testInvalidEncoding()
+	public function invalidEncoding()
 	{
-		$r = $this->makeRequest();
-
-		$r->setEncoding(999);
+		$this->makeRequest()->setEncoding(999);
 	}
 
 	/** @test */
@@ -84,10 +88,5 @@ class RequestTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(null, $r->getUserAndPass());
 		$r->setPass('bar');
 		$this->assertEquals('foo:bar', $r->getUserAndPass());
-	}
-
-	public function makeRequest($curl = null)
-	{
-		return new Request($curl ?: new \anlutro\cURL\cURL);
 	}
 }
