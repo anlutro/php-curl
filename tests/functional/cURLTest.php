@@ -34,14 +34,14 @@ class cURLTest extends PHPUnit_Framework_TestCase
 	/** @test */
 	public function queryRequestBody()
 	{
-		$r = $this->makeCurl()->post(static::URL.'/echo.php', ['foo' => 'bar']);
+		$r = $this->makeCurl()->post(static::URL.'/echo.php', array('foo' => 'bar'));
 		$this->assertEquals('foo=bar', $r->body);
 	}
 
 	/** @test */
 	public function jsonRequestBody()
 	{
-		$r = $this->makeCurl()->jsonPost(static::URL.'/echo.php', ['foo' => 'bar']);
+		$r = $this->makeCurl()->jsonPost(static::URL.'/echo.php', array('foo' => 'bar'));
 		$this->assertEquals('{"foo":"bar"}', $r->body);
 	}
 
@@ -57,9 +57,9 @@ class cURLTest extends PHPUnit_Framework_TestCase
 	{
 		$file = __FILE__;
 		if (function_exists('curl_file_create')) {
-			$data = ['file' => curl_file_create($file)];
+			$data = array('file' => curl_file_create($file));
 		} else {
-			$data = ['file' => '@'.$file];
+			$data = array('file' => '@'.$file);
 		}
 
 		$r = $this->makeCurl()->rawPost(static::URL.'/upload.php', $data);
