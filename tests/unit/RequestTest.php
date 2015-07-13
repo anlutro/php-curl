@@ -100,4 +100,22 @@ class RequestTest extends PHPUnit_Framework_TestCase
 		$r->setPass('bar');
 		$this->assertEquals('foo:bar', $r->getUserAndPass());
 	}
+
+	/** @test */
+	public function cookies()
+	{
+		$r = $this->makeRequest();
+
+		$this->assertEquals(array(), $r->getCookies());
+
+		$r->setCookie('foo', 'bar');
+		$this->assertEquals(array('foo' => 'bar'), $r->getCookies());
+		$this->assertEquals('bar', $r->getCookie('foo'));
+		$this->assertEquals('foo=bar', $r->getHeader('cookie'));
+
+		$r->setCookie('bar', 'baz');
+		$this->assertEquals(array('foo' => 'bar', 'bar' => 'baz'), $r->getCookies());
+		$this->assertEquals('baz', $r->getCookie('bar'));
+		$this->assertEquals('foo=bar; bar=baz', $r->getHeader('cookie'));
+	}
 }

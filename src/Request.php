@@ -43,6 +43,13 @@ class Request
 	private $headers = array();
 
 	/**
+	 * The cookies sent with the request.
+	 *
+	 * @var array
+	 */
+	private $cookies = array();
+
+	/**
 	 * POST data sent with the request.
 	 *
 	 * @var array
@@ -187,6 +194,46 @@ class Request
 	public function getHeaders()
 	{
 		return $this->headers;
+	}
+
+	public function setCookie($key, $value)
+	{
+		$this->cookies[$key] = $value;
+		$this->updateCookieHeader();
+
+		return $this;
+	}
+
+	public function setCookies(array $cookies)
+	{
+		foreach ($cookies as $cookie) {
+			$this->cookies[$key] = $value;
+		}
+
+		$this->updateCookieHeader();
+
+		return $this;
+	}
+
+	private function updateCookieHeader()
+	{
+		$strings = array();
+
+		foreach ($this->cookies as $key => $value) {
+			$strings[] = "{$key}={$value}";
+		}
+
+		$this->setHeader('cookie', implode('; ', $strings));
+	}
+
+	public function getCookie($key)
+	{
+		return isset($this->cookies[$key]) ? $this->cookies[$key] : null;
+	}
+
+	public function getCookies()
+	{
+		return $this->cookies;
 	}
 
 	/**
