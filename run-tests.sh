@@ -6,14 +6,8 @@ else
 	php_version=$TRAVIS_PHP_VERSION
 fi
 if [ "$php_version" != "5.3" ] && [ "$php_version" != "hhvm" ]; then
-	server_support=true
-fi
-
-
-if [ $server_support ]; then
 	php -S localhost:8080 -t tests/server > /dev/null 2>&1 &
-else
-	phpunit_args="--exclude-group server"
+	export CURL_TEST_SERVER_RUNNING=1
 fi
 
 phpunit $phpunit_args

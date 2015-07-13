@@ -7,6 +7,13 @@ class cURLTest extends PHPUnit_Framework_TestCase
 {
 	const URL = 'http://localhost:8080';
 
+	public function setUp()
+	{
+		if (!getenv('CURL_TEST_SERVER_RUNNING')) {
+			$this->markTestSkipped('The web server is not running.');
+		}
+	}
+
 	private function makeCurl()
 	{
 		return new anlutro\cURL\cURL;
