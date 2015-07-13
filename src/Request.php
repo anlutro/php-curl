@@ -190,6 +190,7 @@ class Request
 	 */
 	public function setHeader($key, $value)
 	{
+		$key = strtolower($key);
 		$this->headers[$key] = $value;
 
 		return $this;
@@ -204,6 +205,8 @@ class Request
 	 */
 	public function getHeader($key)
 	{
+		$key = strtolower($key);
+
 		return isset($this->headers[$key]) ? $this->headers[$key] : null;
 	}
 
@@ -281,7 +284,7 @@ class Request
 	 *
 	 * @param  string $user
 	 *
-	 * @return mixed
+	 * @return static
 	 */
 	public function setUser($user)
 	{
@@ -295,7 +298,7 @@ class Request
 	 *
 	 * @param  string $pass
 	 *
-	 * @return mixed
+	 * @return static
 	 */
 	public function setPass($pass)
 	{
@@ -376,6 +379,8 @@ class Request
 
 	/**
 	* Get the current encoding which will be used on the POST data
+	*
+	* @return int  a Request::ENCODING_* constant
 	*/
 	public function getEncoding()
 	{
