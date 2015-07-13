@@ -61,6 +61,17 @@ class RequestTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(array('foo: bar', 'bar: baz'), $r->formatHeaders());
 	}
 
+	/** @test */
+	public function headersAreCaseInsensitive()
+	{
+		$r = $this->makeRequest();
+
+		$r->setHeader('foo', 'bar');
+		$r->setHeader('Foo', 'bar');
+		$r->setHeader('FOO', 'bar');
+		$this->assertEquals(array('foo' => 'bar'), $r->getHeaders());
+	}
+
 	/**
 	 * @test
 	 * @expectedException InvalidArgumentException
