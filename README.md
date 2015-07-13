@@ -2,7 +2,9 @@
 
 The smallest possible OOP wrapper for PHP's curl capabilities.
 
-Note that this is **not** meant as a high-level abstraction. You should still know how "pure PHP" curl works, you need to know the curl options to set, and you need to know 
+Note that this is **not** meant as a high-level abstraction. You should still know how "pure PHP" curl works, you need to know the curl options to set, and you need to know some HTTP basics.
+
+If you're looking for a more user-friendly abstraction, check out [Guzzle](http://guzzle.readthedocs.org/en/latest/).
 
 ## Installation
 
