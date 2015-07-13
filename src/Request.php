@@ -136,6 +136,20 @@ class Request
 	}
 
 	/**
+	 * Set a specific header to be sent with the request.
+	 *
+	 * @param string $key
+	 * @param mixed  $value
+	 */
+	public function setHeader($key, $value)
+	{
+		$key = strtolower($key);
+		$this->headers[$key] = $value;
+
+		return $this;
+	}
+
+	/**
 	 * Set the headers to be sent with the request.
 	 * 
 	 * Pass an associative array - e.g. ['Content-Type' => 'application/json']
@@ -149,6 +163,20 @@ class Request
 		$this->headers = $headers;
 
 		return $this;
+	}
+
+	/**
+	 * Get a specific header from the request.
+	 *
+	 * @param  string $key
+	 *
+	 * @return mixed
+	 */
+	public function getHeader($key)
+	{
+		$key = strtolower($key);
+
+		return isset($this->headers[$key]) ? $this->headers[$key] : null;
 	}
 
 	/**
@@ -183,34 +211,6 @@ class Request
 	}
 
 	/**
-	 * Set a specific header to be sent with the request.
-	 *
-	 * @param string $key
-	 * @param mixed  $value
-	 */
-	public function setHeader($key, $value)
-	{
-		$key = strtolower($key);
-		$this->headers[$key] = $value;
-
-		return $this;
-	}
-
-	/**
-	 * Get a specific header from the request.
-	 *
-	 * @param  string $key
-	 *
-	 * @return mixed
-	 */
-	public function getHeader($key)
-	{
-		$key = strtolower($key);
-
-		return isset($this->headers[$key]) ? $this->headers[$key] : null;
-	}
-
-	/**
 	 * Set the POST data to be sent with the request.
 	 *
 	 * @param mixed $data
@@ -233,25 +233,58 @@ class Request
 	}
 
 	/**
-	 * Set the cURL options for the request.
-	 *
-	 * @param array $options
-	 */
-	public function setOptions(array $options)
+	* Set the encoding to use on the POST data, and (possibly) associated Content-Type headers
+	*
+	* @param int  $encoding  a Request::ENCODING_* constant
+	*/
+	public function setEncoding($encoding)
 	{
-		$this->options = $options;
+		$encoding = intval($encoding);
+
+		if (
+			$encoding !== static::ENCODING_QUERY &&
+			$encoding !== static::ENCODING_JSON &&
+			$encoding !== static::ENCODING_RAW
+		) {
+			throw new \InvalidArgumentException("Encoding [$encoding] not a known Request::ENCODING_* constant");
+		}
+
+		if ($encoding === static::ENCODING_JSON && !$this->getHeader('Content-Type')) {
+			$this->setHeader('Content-Type', 'application/json');
+		}
+
+		$this->encoding = $encoding;
 
 		return $this;
 	}
 
 	/**
-	 * Get the cURL options for the request.
-	 *
-	 * @return array
-	 */
-	public function getOptions()
+	* Get the current encoding which will be used on the POST data
+	*
+	* @return int  a Request::ENCODING_* constant
+	*/
+	public function getEncoding()
 	{
-		return $this->options;
+		return $this->encoding;
+	}
+
+	/**
+	 * Encode the POST data as a string.
+	 *
+	 * @return string
+	 */
+	public function encodeData()
+	{
+		switch ($this->encoding) {
+			case static::ENCODING_JSON:
+				return json_encode($this->data);
+			case static::ENCODING_QUERY:
+				return http_build_query($this->data);
+			case static::ENCODING_RAW:
+				return $this->data;
+			default:
+				throw new \UnexpectedValueException("Encoding [$encoding] not a known Request::ENCODING_* constant");
+		}
 	}
 
 	/**
@@ -268,6 +301,18 @@ class Request
 	}
 
 	/**
+	 * Set the cURL options for the request.
+	 *
+	 * @param array $options
+	 */
+	public function setOptions(array $options)
+	{
+		$this->options = $options;
+
+		return $this;
+	}
+
+	/**
 	 * Get a specific curl option from the request.
 	 *
 	 * @param  string $key
@@ -277,6 +322,32 @@ class Request
 	public function getOption($key)
 	{
 		return isset($this->options[$key]) ? $this->options[$key] : null;
+	}
+
+	/**
+	 * Get the cURL options for the request.
+	 *
+	 * @return array
+	 */
+	public function getOptions()
+	{
+		return $this->options;
+	}
+
+	/**
+	 * Set the HTTP basic username and password.
+	 *
+	 * @param  string $user
+	 * @param  string $pass
+	 *
+	 * @return string
+	 */
+	public function auth($user, $pass)
+	{
+		$this->user = $user;
+		$this->pass = $pass;
+
+		return $this;
 	}
 
 	/**
@@ -323,25 +394,6 @@ class Request
 	}
 
 	/**
-	 * Encode the POST data as a string.
-	 *
-	 * @return string
-	 */
-	public function encodeData()
-	{
-		switch ($this->encoding) {
-			case static::ENCODING_JSON:
-				return json_encode($this->data);
-			case static::ENCODING_QUERY:
-				return http_build_query($this->data);
-			case static::ENCODING_RAW:
-				return $this->data;
-			default:
-				throw new \UnexpectedValueException("Encoding [$encoding] not a known Request::ENCODING_* constant");
-		}
-	}
-
-	/**
 	 * Whether the request is JSON or not.
 	 *
 	 * @return boolean
@@ -349,42 +401,6 @@ class Request
 	public function isJson()
 	{
 		return $this->encoding === static::ENCODING_JSON;
-	}
-
-	/**
-	* Set the encoding to use on the POST data, and (possibly) associated Content-Type headers
-	*
-	* @param int  $encoding  a Request::ENCODING_* constant
-	*/
-	public function setEncoding($encoding)
-	{
-		$encoding = intval($encoding);
-
-		if (
-			$encoding !== static::ENCODING_QUERY &&
-			$encoding !== static::ENCODING_JSON &&
-			$encoding !== static::ENCODING_RAW
-		) {
-			throw new \InvalidArgumentException("Encoding [$encoding] not a known Request::ENCODING_* constant");
-		}
-
-		if ($encoding === static::ENCODING_JSON && !$this->getHeader('Content-Type')) {
-			$this->setHeader('Content-Type', 'application/json');
-		}
-
-		$this->encoding = $encoding;
-
-		return $this;
-	}
-
-	/**
-	* Get the current encoding which will be used on the POST data
-	*
-	* @return int  a Request::ENCODING_* constant
-	*/
-	public function getEncoding()
-	{
-		return $this->encoding;
 	}
 
 	/**
