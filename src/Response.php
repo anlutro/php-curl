@@ -57,14 +57,59 @@ class Response
 	public function __construct($body, $headers, $info = array())
 	{
 		$this->body = $body;
-		$this->headers = $headers;
 		$this->info = $info;
-
-		if (isset($this->headers['HTTP/1.1'])) {
-			$this->setCode($this->headers['HTTP/1.1']);
-		} elseif (isset($this->headers['HTTP/1.0'])) {
-			$this->setCode($this->headers['HTTP/1.0']);
+		if (is_array($headers)) {
+			$this->headers = $headers;
+		} else {
+			$this->headers = static::headerToArray($headers);
 		}
+
+		if (isset($this->headers['http/1.1'])) {
+			$this->setCode($this->headers['http/1.1']);
+		} elseif (isset($this->headers['http/1.0'])) {
+			$this->setCode($this->headers['http/1.0']);
+		}
+	}
+
+	/**
+	 * Turn a header string into an array.
+	 *
+	 * @param  string $header
+	 *
+	 * @return array
+	 */
+	protected static function headerToArray($header)
+	{
+		$headerLines = explode("\r\n", $header);
+		$headers = array();
+
+		foreach ($headerLines as $header) {
+			$key = null;
+			$val = null;
+			$delimiter = strpos($header, ': ');
+
+			if ($delimiter !== false) {
+				$key = substr($header, 0, $delimiter);
+				$val = substr($header, $delimiter + 2);
+			} else {
+				$delimiter = strpos($header, ' ');
+				if ($delimiter !== false) {
+					$key = substr($header, 0, $delimiter);
+					$val = substr($header, $delimiter + 1);
+				}
+			}
+
+			if ($key !== null) {
+				$key = strtolower($key);
+				if (isset($headers[$key])) {
+					$headers[$key] = array($headers[$key], $val);
+				} else {
+					$headers[$key] = $val;
+				}
+			}
+		}
+
+		return $headers;
 	}
 
 	/**
@@ -75,7 +120,8 @@ class Response
 	protected function setCode($code)
 	{
 		$this->statusText = $code;
-		list($this->statusCode, ) = explode(' ', $code);
+		$code = explode(' ', $code);
+		$this->statusCode = (int) $code[0];
 	}
 
 	/**
@@ -87,7 +133,10 @@ class Response
 	 */
 	public function getHeader($key)
 	{
-		return array_key_exists($key, $this->headers) ? $this->headers[$key] : null;
+		$key = strtolower($key);
+
+		return array_key_exists($key, $this->headers) ?
+			$this->headers[$key] : null;
 	}
 
 	/**

@@ -261,48 +261,14 @@ class cURL
 	protected function createResponseObject($response)
 	{
 		$info = curl_getinfo($this->ch);
-
 		$headerSize = curl_getinfo($this->ch, CURLINFO_HEADER_SIZE);
-		$headerText = substr($response, 0, $headerSize);
-		$headers = $this->headerToArray($headerText);
 
+		$headers = substr($response, 0, $headerSize);
 		$body = substr($response, $headerSize);
 
 		$class = $this->responseClass;
-		$obj = new $class($body, $headers, $info);
 
-		return $obj;
-	}
-
-	/**
-	 * Turn a header string into an array.
-	 *
-	 * @param  string $header
-	 *
-	 * @return array
-	 */
-	protected function headerToArray($header)
-	{
-		$tmp = explode("\r\n", $header);
-		$headers = array();
-
-		foreach ($tmp as $singleHeader) {
-			$delimiter = strpos($singleHeader, ': ');
-			if ($delimiter !== false) {
-				$key = substr($singleHeader, 0, $delimiter);
-				$val = substr($singleHeader, $delimiter + 2);
-				$headers[$key] = $val;
-			} else {
-				$delimiter = strpos($singleHeader, ' ');
-				if ($delimiter !== false) {
-					$key = substr($singleHeader, 0, $delimiter);
-					$val = substr($singleHeader, $delimiter + 1);
-					$headers[$key] = $val;
-				}
-			}
-		}
-
-		return $headers;
+		return new $class($body, $headers, $info);
 	}
 
 	/**
