@@ -36,6 +36,6 @@ class ResponseTest extends PHPUnit_Framework_TestCase
 	{
 		$header = "Cache-Control: max-age=60\r\nCache-Control: public";
 		$r = $this->makeResponse('', $header);
-		$this->assertEquals(['max-age=60', 'public'], $r->getHeader('cache-control'));
+		$this->assertEquals(array('max-age=60', 'public'), $r->getHeader('cache-control'));
 	}
 }
