@@ -306,10 +306,10 @@ class Request
 	}
 
 	/**
-	* Get the current encoding which will be used on the POST data
-	*
-	* @return int  a Request::ENCODING_* constant
-	*/
+	 * Get the current encoding which will be used on the POST data
+	 *
+	 * @return int  a Request::ENCODING_* constant
+	 */
 	public function getEncoding()
 	{
 		return $this->encoding;
