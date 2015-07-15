@@ -11,7 +11,7 @@ if [ "$php_version" != "5.3" ] && [ "$php_version" != "hhvm" ]; then
 	export CURL_TEST_SERVER_RUNNING=1
 fi
 
-phpunit $phpunit_args
+phpunit $@
 ret=$?
 
 if [ $CURL_TEST_SERVER_RUNNING ]; then
