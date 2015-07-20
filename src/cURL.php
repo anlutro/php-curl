@@ -240,7 +240,7 @@ class cURL
 			$errmsg = curl_error($this->ch);
 			$msg = "cURL request failed with error [$errno]: $errmsg";
 			curl_close($this->ch);
-			throw new cURLException($msg, $errno);
+			throw new cURLException($request, $msg, $errno);
 		}
 
 		$response = $this->createResponseObject($result);
