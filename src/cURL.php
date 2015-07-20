@@ -45,6 +45,7 @@ class cURL
 	 */
 	protected $methods = array(
 		'get'     => false,
+		'head'    => false,
 		'post'    => true,
 		'put'     => true,
 		'patch'   => true,
