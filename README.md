@@ -44,7 +44,7 @@ var_dump($response->headers); // array of headers
 var_dump($response->info); // array of curl info
 ```
 
-If you need to send headers or set cURL options you can manipulate a request object directly. `send()` finalizes the request and returns the result.
+If you need to send headers or set [cURL options](http://php.net/manual/en/function.curl-setopt.php) you can manipulate a request object directly. `send()` finalizes the request and returns the result.
 
 ```php
 // newRequest, newJsonRequest and newRawRequest returns a Request object
@@ -70,6 +70,8 @@ $request = $curl->newRequest('post', $url, ['foo' => 'bar'])
 ### Laravel
 
 The package comes with a facade you can use if you prefer the static method calls over dependency injection.
+
+You do **not** need to add a service provider.
 
 Optionally, add `'cURL' => 'anlutro\cURL\Laravel\cURL'` to the array of aliases in `config/app.php`.
 
