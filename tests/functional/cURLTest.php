@@ -94,6 +94,6 @@ class cURLTest extends PHPUnit_Framework_TestCase
 	public function throwsExceptionWhenDataProvidedButNotAllowed()
 	{
 		$this->setExpectedException('InvalidArgumentException', 'HTTP method [options] does not allow POST data.');
-		$this->makeCurl()->options('http://localhost', ['foo' => 'bar']);
+		$this->makeCurl()->options('http://localhost', array('foo' => 'bar'));
 	}
 }
