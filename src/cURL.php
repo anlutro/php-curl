@@ -274,14 +274,14 @@ class cURL
 	/**
 	 * Handle dynamic calls to the class.
 	 *
-	 * @param  string $method
+	 * @param  string $func
 	 * @param  array  $args
 	 *
 	 * @return mixed
 	 */
-	public function __call($method, $args)
+	public function __call($func, $args)
 	{
-		$method = strtolower($method);
+		$method = strtolower($func);
 
 		$encoding = Request::ENCODING_QUERY;
 
@@ -297,13 +297,18 @@ class cURL
 			throw new \InvalidArgumentException("Method [$method] not a valid HTTP method.");
 		}
 
+		if (!isset($args[0])) {
+			throw new \BadMethodCallException('Missing argument 1 ($url) for '.__CLASS__.'::'.$func);
+		}
 		$url = $args[0];
 
-		$allowData = $this->methods[$method];
-		if ($allowData && isset($args[1])) {
+		if (isset($args[1])) {
+			if (!$this->methods[$method]) {
+				throw new \InvalidArgumentException("HTTP method [$method] does not allow POST data.");
+			}
 			$data = $args[1];
 		} else {
-			$data = array();
+			$data = null;
 		}
 
 		$request = $this->newRequest($method, $url, $data, $encoding);
