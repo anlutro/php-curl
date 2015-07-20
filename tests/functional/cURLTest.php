@@ -82,4 +82,18 @@ class cURLTest extends PHPUnit_Framework_TestCase
 		$this->setExpectedException('anlutro\cURL\cURLException', 'cURL request failed with error [7]:');
 		$this->makeCurl()->get('http://0.0.0.0');
 	}
+
+	/** @test */
+	public function throwsExceptionWithMissingUrl()
+	{
+		$this->setExpectedException('BadMethodCallException', 'Missing argument 1 ($url) for anlutro\cURL\cURL::get');
+		$this->makeCurl()->get();
+	}
+
+	/** @test */
+	public function throwsExceptionWhenDataProvidedButNotAllowed()
+	{
+		$this->setExpectedException('InvalidArgumentException', 'HTTP method [options] does not allow POST data.');
+		$this->makeCurl()->options('http://localhost', ['foo' => 'bar']);
+	}
 }
