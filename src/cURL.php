@@ -294,7 +294,7 @@ class cURL
 		}
 
 		if (!array_key_exists($method, $this->methods)) {
-			throw new \InvalidArgumentException("Method [$method] not a valid HTTP method.");
+			throw new \BadMethodCallException("Method [$method] not a valid HTTP method.");
 		}
 
 		if (!isset($args[0])) {
