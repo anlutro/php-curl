@@ -1,5 +1,11 @@
 # php-curl
 
+[![Build Status](https://travis-ci.org/anlutro/php-curl.png?branch=master)](https://travis-ci.org/anlutro/php-curl)
+[![Latest Stable Version](https://poser.pugx.org/anlutro/curl/v/stable.svg)](https://github.com/anlutro/php-curl/releases)
+[![Latest Unstable Version](https://poser.pugx.org/anlutro/curl/v/unstable.svg)](https://github.com/anlutro/php-curl/branches/active)
+[![License](https://poser.pugx.org/anlutro/curl/license.svg)](http://opensource.org/licenses/MIT)
+
+
 The smallest possible OOP wrapper for PHP's curl capabilities.
 
 Note that this is **not** meant as a high-level abstraction. You should still know how "pure PHP" curl works, you need to know the curl options to set, and you need to know some HTTP basics.
