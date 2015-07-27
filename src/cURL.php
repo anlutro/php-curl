@@ -12,24 +12,24 @@ namespace anlutro\cURL;
 /**
  * cURL wrapper class.
  *
- * @method Response get(string url) Execute a GET request
- * @method Response delete(string url) Execute a DELETE request
- * @method Response head(string url) Execute a HEAD request
- * @method Response post(string url, array data) Execute a POST request
- * @method Response put(string url, array data) Execute a PUT request
- * @method Response patch(string url, array data) Execute a PATCH request
- * @method Response jsonGet(string url) Execute a JSON GET request
- * @method Response jsonDelete(string url) Execute a JSON DELETE request
- * @method Response jsonHead(string url) Execute a JSON HEAD request
- * @method Response jsonPost(string url, array data) Execute a JSON POST request
- * @method Response jsonPut(string url, array data) Execute a JSON PUT request
- * @method Response jsonPatch(string url, array data) Execute a JSON PATCH request
- * @method Response rawGet(string url) Execute a raw GET request
- * @method Response rawDelete(string url) Execute a raw DELETE request
- * @method Response rawHead(string url) Execute a raw HEAD request
- * @method Response rawPost(string url, array data) Execute a raw POST request
- * @method Response rawPut(string url, array data) Execute a raw PUT request
- * @method Response rawPatch(string url, array data) Execute a raw PATCH request
+ * @method Response get(string $url) Execute a GET request
+ * @method Response delete(string $url) Execute a DELETE request
+ * @method Response head(string $url) Execute a HEAD request
+ * @method Response post(string $url, array $data) Execute a POST request
+ * @method Response put(string $url, array $data) Execute a PUT request
+ * @method Response patch(string $url, array $data) Execute a PATCH request
+ * @method Response jsonGet(string $url) Execute a JSON GET request
+ * @method Response jsonDelete(string $url) Execute a JSON DELETE request
+ * @method Response jsonHead(string $url) Execute a JSON HEAD request
+ * @method Response jsonPost(string $url, array $data) Execute a JSON POST request
+ * @method Response jsonPut(string $url, array $data) Execute a JSON PUT request
+ * @method Response jsonPatch(string $url, array $data) Execute a JSON PATCH request
+ * @method Response rawGet(string $url) Execute a raw GET request
+ * @method Response rawDelete(string $url) Execute a raw DELETE request
+ * @method Response rawHead(string $url) Execute a raw HEAD request
+ * @method Response rawPost(string $url, array $data) Execute a raw POST request
+ * @method Response rawPut(string $url, array $data) Execute a raw PUT request
+ * @method Response rawPatch(string $url, array $data) Execute a raw PATCH request
  */
 class cURL
 {
