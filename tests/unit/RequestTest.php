@@ -117,5 +117,10 @@ class RequestTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(array('foo' => 'bar', 'bar' => 'baz'), $r->getCookies());
 		$this->assertEquals('baz', $r->getCookie('bar'));
 		$this->assertEquals('foo=bar; bar=baz', $r->getHeader('cookie'));
+
+		$r->setCookies(array('baz' => 'foo'));
+		$this->assertEquals(array('baz' => 'foo'), $r->getCookies());
+		$this->assertEquals('foo', $r->getCookie('baz'));
+		$this->assertEquals('baz=foo', $r->getHeader('cookie'));
 	}
 }

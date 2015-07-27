@@ -196,6 +196,12 @@ class Request
 		return $this->headers;
 	}
 
+	/**
+	 * Set a cookie.
+	 *
+	 * @param string $key
+	 * @param string $value
+	 */
 	public function setCookie($key, $value)
 	{
 		$this->cookies[$key] = $value;
@@ -204,17 +210,24 @@ class Request
 		return $this;
 	}
 
+	/**
+	 * Replace the request's cookies.
+	 *
+	 * @param array $cookies
+	 */
 	public function setCookies(array $cookies)
 	{
-		foreach ($cookies as $cookie) {
-			$this->cookies[$key] = $value;
-		}
-
+		$this->cookies = $cookies;
 		$this->updateCookieHeader();
 
 		return $this;
 	}
 
+	/**
+	 * Read the request cookies and set the cookie header.
+	 *
+	 * @return void
+	 */
 	private function updateCookieHeader()
 	{
 		$strings = array();
@@ -226,11 +239,23 @@ class Request
 		$this->setHeader('cookie', implode('; ', $strings));
 	}
 
+	/**
+	 * Get a specific cookie from the request.
+	 *
+	 * @param  string $key
+	 *
+	 * @return string|null
+	 */
 	public function getCookie($key)
 	{
 		return isset($this->cookies[$key]) ? $this->cookies[$key] : null;
 	}
 
+	/**
+	 * Get all the request's cookies.
+	 *
+	 * @return string[]
+	 */
 	public function getCookies()
 	{
 		return $this->cookies;
