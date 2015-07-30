@@ -24,7 +24,7 @@ class ResponseTest extends PHPUnit_Framework_TestCase
 	/** @test */
 	public function parsesHeaderStringCorrectly()
 	{
-		$header = "Content-Type: text/plain\r\nContent-Length: 0";
+		$header = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 0";
 		$r = $this->makeResponse('', $header);
 		$this->assertEquals('text/plain', $r->getHeader('content-type'));
 		$this->assertEquals('0', $r->getHeader('content-length'));
@@ -34,8 +34,23 @@ class ResponseTest extends PHPUnit_Framework_TestCase
 	/** @test */
 	public function duplicateHeadersAreHandled()
 	{
-		$header = "X-Var: A\r\nX-Var: B\r\nX-Var: C";
+		$header = "HTTP/1.1 200 OK\r\nX-Var: A\r\nX-Var: B\r\nX-Var: C";
 		$r = $this->makeResponse('', $header);
 		$this->assertEquals(array('A', 'B', 'C'), $r->getHeader('X-Var'));
+	}
+
+	/** @test */
+	public function httpContinueResponsesAreHandled()
+	{
+		$header = "HTTP/1.1 100 Continue\r\n\r\nHTTP/1.1 200 OK";
+		$r = $this->makeResponse('', $header);
+		$this->assertEquals(100, $r->statusCode);
+	}
+
+	/** @test */
+	public function throwsExceptionIfHeaderDoesntStartWithHttpStatus()
+	{
+		$this->setExpectedException('InvalidArgumentException', 'Invalid response header');
+		$this->makeResponse('', 'x-var: foo');
 	}
 }

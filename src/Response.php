@@ -51,69 +51,58 @@ class Response
 
 	/**
 	 * @param string $body
-	 * @param array  $headers
+	 * @param string $headers
 	 * @param mixed  $info
 	 */
 	public function __construct($body, $headers, $info = array())
 	{
 		$this->body = $body;
 		$this->info = $info;
-		if (is_array($headers)) {
-			$this->headers = $headers;
-		} else {
-			$this->headers = static::headerToArray($headers);
-		}
-
-		if (isset($this->headers['http/1.1'])) {
-			$this->setCode($this->headers['http/1.1']);
-		} elseif (isset($this->headers['http/1.0'])) {
-			$this->setCode($this->headers['http/1.0']);
-		}
+		$this->parseHeader($headers);
 	}
 
 	/**
-	 * Turn a header string into an array.
+	 * Read a header string.
 	 *
 	 * @param  string $header
-	 *
-	 * @return array
 	 */
-	protected static function headerToArray($header)
+	protected  function parseHeader($header)
 	{
-		$headerLines = explode("\r\n", $header);
+		$headerLines = explode("\r\n", trim($header));
 		$headers = array();
 
-		foreach ($headerLines as $header) {
-			$key = null;
-			$val = null;
-			$delimiter = strpos($header, ': ');
+		if (!preg_match('/^HTTP\/\d\.\d [0-9]{3}/', $headerLines[0])) {
+			throw new \InvalidArgumentException('Invalid response header');
+		}
+		$this->setStatus($headerLines[0]);
+		unset($headerLines[0]);
 
-			if ($delimiter !== false) {
-				$key = substr($header, 0, $delimiter);
-				$val = substr($header, $delimiter + 2);
-			} else {
-				$delimiter = strpos($header, ' ');
-				if ($delimiter !== false) {
-					$key = substr($header, 0, $delimiter);
-					$val = substr($header, $delimiter + 1);
-				}
+		foreach ($headerLines as $header) {
+			// skip empty lines
+			if (!$header) {
+				continue;
 			}
 
-			if ($key !== null) {
-				$key = strtolower($key);
-				if (isset($headers[$key])) {
-					if (is_array($headers[$key])) {
-						$headers[$key][] = $val;
-					} else {
-						$headers[$key] = array($headers[$key], $val);
-					}
+			$delimiter = strpos($header, ':');
+			if (!$delimiter) {
+				continue;
+			}
+
+			$key = trim(strtolower(substr($header, 0, $delimiter)));
+			$val = ltrim(substr($header, $delimiter + 1));
+
+			if (isset($headers[$key])) {
+				if (is_array($headers[$key])) {
+					$headers[$key][] = $val;
 				} else {
-					$headers[$key] = $val;
+					$headers[$key] = array($headers[$key], $val);
 				}
+			} else {
+				$headers[$key] = $val;
 			}
 		}
 
-		return $headers;
+		$this->headers = $headers;
 	}
 
 	/**
@@ -121,8 +110,9 @@ class Response
 	 *
 	 * @param string $code
 	 */
-	protected function setCode($code)
+	protected function setStatus($status)
 	{
+		list(, $code) = explode(' ', $status, 2);
 		$this->statusText = $code;
 		$code = explode(' ', $code);
 		$this->statusCode = (int) $code[0];
