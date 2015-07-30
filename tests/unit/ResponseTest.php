@@ -42,9 +42,10 @@ class ResponseTest extends PHPUnit_Framework_TestCase
 	/** @test */
 	public function httpContinueResponsesAreHandled()
 	{
-		$header = "HTTP/1.1 100 Continue\r\n\r\nHTTP/1.1 200 OK";
+		$header = "HTTP/1.1 100 Continue\r\n\r\nHTTP/1.1 200 OK\r\nx-var: foo";
 		$r = $this->makeResponse('', $header);
-		$this->assertEquals(100, $r->statusCode);
+		$this->assertEquals(200, $r->statusCode);
+		$this->assertEquals('foo', $r->getHeader('x-var'));
 	}
 
 	/** @test */

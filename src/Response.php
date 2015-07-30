@@ -62,22 +62,56 @@ class Response
 	}
 
 	/**
-	 * Read a header string.
+	 * Parse a header string.
 	 *
 	 * @param  string $header
+	 *
+	 * @return void
 	 */
-	protected  function parseHeader($header)
+	protected function parseHeader($header)
 	{
-		$headerLines = explode("\r\n", trim($header));
-		$headers = array();
+		$headers = explode("\r\n", trim($header));
+		$this->parseHeaders($headers);
+	}
 
-		if (!preg_match('/^HTTP\/\d\.\d [0-9]{3}/', $headerLines[0])) {
+	/**
+	 * Parse an array of headers.
+	 *
+	 * @param  array  $headers
+	 *
+	 * @return void
+	 */
+	protected function parseHeaders(array $headers)
+	{
+		$this->headers = array();
+
+		// find and set the HTTP status code and reason
+		$firstHeader = array_shift($headers);
+		if (!preg_match('/^HTTP\/\d\.\d [0-9]{3}/', $firstHeader)) {
 			throw new \InvalidArgumentException('Invalid response header');
 		}
-		$this->setStatus($headerLines[0]);
-		unset($headerLines[0]);
+		list(, $status) = explode(' ', $firstHeader, 2);
+		$code = explode(' ', $status);
+		$code = (int) $code[0];
 
-		foreach ($headerLines as $header) {
+		// special handling for HTTP 100 responses
+		if ($code === 100) {
+			// remove empty header lines between 100 and actual HTTP status
+			foreach ($headers as $key => $header) {
+				if ($header) {
+					break;
+				}
+				unset($headers[$key]);
+			}
+
+			// start the process over with the 100 continue header stripped away
+			return $this->parseHeaders($headers);
+		}
+
+		$this->statusText = $status;
+		$this->statusCode = $code;
+
+		foreach ($headers as $header) {
 			// skip empty lines
 			if (!$header) {
 				continue;
@@ -91,31 +125,16 @@ class Response
 			$key = trim(strtolower(substr($header, 0, $delimiter)));
 			$val = ltrim(substr($header, $delimiter + 1));
 
-			if (isset($headers[$key])) {
-				if (is_array($headers[$key])) {
-					$headers[$key][] = $val;
+			if (isset($this->headers[$key])) {
+				if (is_array($this->headers[$key])) {
+					$this->headers[$key][] = $val;
 				} else {
-					$headers[$key] = array($headers[$key], $val);
+					$this->headers[$key] = array($this->headers[$key], $val);
 				}
 			} else {
-				$headers[$key] = $val;
+				$this->headers[$key] = $val;
 			}
 		}
-
-		$this->headers = $headers;
-	}
-
-	/**
-	 * Set the response code.
-	 *
-	 * @param string $code
-	 */
-	protected function setStatus($status)
-	{
-		list(, $code) = explode(' ', $status, 2);
-		$this->statusText = $code;
-		$code = explode(' ', $code);
-		$this->statusCode = (int) $code[0];
 	}
 
 	/**
