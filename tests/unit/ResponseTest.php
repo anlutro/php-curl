@@ -34,8 +34,8 @@ class ResponseTest extends PHPUnit_Framework_TestCase
 	/** @test */
 	public function duplicateHeadersAreHandled()
 	{
-		$header = "Cache-Control: max-age=60\r\nCache-Control: public";
+		$header = "X-Var: A\r\nX-Var: B\r\nX-Var: C";
 		$r = $this->makeResponse('', $header);
-		$this->assertEquals(array('max-age=60', 'public'), $r->getHeader('cache-control'));
+		$this->assertEquals(array('A', 'B', 'C'), $r->getHeader('X-Var'));
 	}
 }

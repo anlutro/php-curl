@@ -102,7 +102,11 @@ class Response
 			if ($key !== null) {
 				$key = strtolower($key);
 				if (isset($headers[$key])) {
-					$headers[$key] = array($headers[$key], $val);
+					if (is_array($headers[$key])) {
+						$headers[$key][] = $val;
+					} else {
+						$headers[$key] = array($headers[$key], $val);
+					}
 				} else {
 					$headers[$key] = $val;
 				}
