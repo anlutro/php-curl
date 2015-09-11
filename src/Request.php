@@ -171,7 +171,7 @@ class Request
 	 */
 	public function setHeaders(array $headers)
 	{
-		$this->headers = [];
+		$this->headers = array();
 
 		foreach ($headers as $key => $value) {
 			$this->setHeader($key, $value);

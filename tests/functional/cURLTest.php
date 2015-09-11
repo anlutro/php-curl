@@ -101,7 +101,7 @@ class cURLTest extends PHPUnit_Framework_TestCase
 	public function defaultHeadersAreAdded()
 	{
 		$curl = $this->makeCurl();
-		$curl->setDefaultHeaders(['foo' => 'bar']);
+		$curl->setDefaultHeaders(array('foo' => 'bar'));
 		$request = $curl->newRequest('post', 'localhost');
 		$this->assertEquals('bar', $request->getHeader('foo'));
 	}
@@ -110,7 +110,7 @@ class cURLTest extends PHPUnit_Framework_TestCase
 	public function defaultOptionsAreAdded()
 	{
 		$curl = $this->makeCurl();
-		$curl->setDefaultOptions(['foo' => 'bar']);
+		$curl->setDefaultOptions(array('foo' => 'bar'));
 		$request = $curl->newRequest('post', 'localhost');
 		$this->assertEquals('bar', $request->getOption('foo'));
 	}
