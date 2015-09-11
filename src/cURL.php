@@ -75,6 +75,13 @@ class cURL
 	protected $defaultHeaders = array();
 
 	/**
+	 * The default curl options.
+	 *
+	 * @var array
+	 */
+	protected $defaultOptions = array();
+
+	/**
 	 * Get allowed methods.
 	 *
 	 * @return array
@@ -122,6 +129,26 @@ class cURL
 	public function getDefaultHeaders()
 	{
 		return $this->defaultHeaders;
+	}
+
+	/**
+	 * Set the default curl options for every request.
+	 *
+	 * @param array $options
+	 */
+	public function setDefaultOptions(array $options)
+	{
+		$this->defaultOptions = $options;
+	}
+
+	/**
+	 * Get the default options.
+	 *
+	 * @return array
+	 */
+	public function getDefaultOptions()
+	{
+		return $this->defaultOptions;
 	}
 
 	/**
@@ -180,6 +207,9 @@ class cURL
 
 		if ($this->defaultHeaders) {
 			$request->setHeaders($this->defaultHeaders);
+		}
+		if ($this->defaultOptions) {
+			$request->setOptions($this->defaultOptions);
 		}
 		$request->setMethod($method);
 		$request->setUrl($url);

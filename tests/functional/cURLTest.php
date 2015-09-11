@@ -105,4 +105,13 @@ class cURLTest extends PHPUnit_Framework_TestCase
 		$request = $curl->newRequest('post', 'localhost');
 		$this->assertEquals('bar', $request->getHeader('foo'));
 	}
+
+	/** @test */
+	public function defaultOptionsAreAdded()
+	{
+		$curl = $this->makeCurl();
+		$curl->setDefaultOptions(['foo' => 'bar']);
+		$request = $curl->newRequest('post', 'localhost');
+		$this->assertEquals('bar', $request->getOption('foo'));
+	}
 }
