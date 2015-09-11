@@ -145,13 +145,17 @@ class Request
 	/**
 	 * Set a specific header to be sent with the request.
 	 *
-	 * @param string $key
+	 * @param string $key   Can also be a string in "foo: bar" format
 	 * @param mixed  $value
 	 */
-	public function setHeader($key, $value)
+	public function setHeader($key, $value = null)
 	{
-		$key = strtolower($key);
-		$this->headers[$key] = $value;
+		if ($value === null) {
+			list($key, $value) = explode(':', $value, 2);
+		}
+
+		$key = strtolower(trim($key));
+		$this->headers[$key] = trim($value);
 
 		return $this;
 	}
@@ -167,7 +171,11 @@ class Request
 	 */
 	public function setHeaders(array $headers)
 	{
-		$this->headers = $headers;
+		$this->headers = [];
+
+		foreach ($headers as $key => $value) {
+			$this->setHeader($key, $value);
+		}
 
 		return $this;
 	}
