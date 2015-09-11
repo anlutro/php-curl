@@ -68,6 +68,13 @@ class cURL
 	protected $responseClass = 'anlutro\cURL\Response';
 
 	/**
+	 * The default headers.
+	 *
+	 * @var array
+	 */
+	protected $defaultHeaders = array();
+
+	/**
 	 * Get allowed methods.
 	 *
 	 * @return array
@@ -95,6 +102,26 @@ class cURL
 	public function setResponseClass($class)
 	{
 		$this->responseClass = $class;
+	}
+
+	/**
+	 * Set the default headers for every request.
+	 *
+	 * @param array $headers
+	 */
+	public function setDefaultHeaders(array $headers)
+	{
+		$this->defaultHeaders = $headers;
+	}
+
+	/**
+	 * Get the default headers.
+	 *
+	 * @return array
+	 */
+	public function getDefaultHeaders()
+	{
+		return $this->defaultHeaders;
 	}
 
 	/**
@@ -151,6 +178,9 @@ class cURL
 		$class = $this->requestClass;
 		$request = new $class($this);
 
+		if ($this->defaultHeaders) {
+			$request->setHeaders($this->defaultHeaders);
+		}
 		$request->setMethod($method);
 		$request->setUrl($url);
 		$request->setData($data);

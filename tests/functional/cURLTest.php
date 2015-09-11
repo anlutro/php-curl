@@ -96,4 +96,13 @@ class cURLTest extends PHPUnit_Framework_TestCase
 		$this->setExpectedException('InvalidArgumentException', 'HTTP method [options] does not allow POST data.');
 		$this->makeCurl()->options('http://localhost', array('foo' => 'bar'));
 	}
+
+	/** @test */
+	public function defaultHeadersAreAdded()
+	{
+		$curl = $this->makeCurl();
+		$curl->setDefaultHeaders(['foo' => 'bar']);
+		$request = $curl->newRequest('post', 'localhost');
+		$this->assertEquals('bar', $request->getHeader('foo'));
+	}
 }
