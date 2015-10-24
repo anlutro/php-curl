@@ -198,7 +198,7 @@ class cURL
 	 * @param  mixed   $data      POST data
 	 * @param  int     $encoding  Request::ENCODING_* constant specifying how to process the POST data
 	 *
-	 * @return mixed
+	 * @return Request
 	 */
 	public function newRequest($method, $url, $data = array(), $encoding = Request::ENCODING_QUERY)
 	{
@@ -226,7 +226,7 @@ class cURL
 	 * @param  string $url
 	 * @param  array  $data    POST data
 	 *
-	 * @return mixed
+	 * @return Request
 	 */
 	public function newJsonRequest($method, $url, array $data = array())
 	{
@@ -240,7 +240,7 @@ class cURL
 	 * @param  string $url
 	 * @param  mixed  $data    request body
 	 *
-	 * @return mixed
+	 * @return Request
 	 */
 	public function newRawRequest($method, $url, $data = '')
 	{

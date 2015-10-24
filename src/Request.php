@@ -486,7 +486,7 @@ class Request
 	/**
 	 * Send the request.
 	 *
-	 * @return mixed
+	 * @return Response
 	 */
 	public function send()
 	{
