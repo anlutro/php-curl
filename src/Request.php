@@ -1,7 +1,7 @@
 <?php
 /**
  * PHP OOP cURL
- * 
+ *
  * @author   Andreas Lutro <anlutro@gmail.com>
  * @license  http://opensource.org/licenses/MIT
  * @package  PHP cURL
@@ -162,7 +162,7 @@ class Request
 
 	/**
 	 * Set the headers to be sent with the request.
-	 * 
+	 *
 	 * Pass an associative array - e.g. ['Content-Type' => 'application/json']
 	 * and the correct header formatting - e.g. 'Content-Type: application/json'
 	 * will be done for you when the request is sent.
@@ -466,7 +466,7 @@ class Request
 	 */
 	public function getUserAndPass()
 	{
-		if ($this->user && $this->pass) {
+		if ($this->user) {
 			return $this->user . ':' . $this->pass;
 		}
 

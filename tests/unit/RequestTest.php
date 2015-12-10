@@ -96,7 +96,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
 		$r = $this->makeRequest();
 		$this->assertEquals(null, $r->getUserAndPass());
 		$r->setUser('foo');
-		$this->assertEquals(null, $r->getUserAndPass());
+		$this->assertEquals('foo:', $r->getUserAndPass());
 		$r->setPass('bar');
 		$this->assertEquals('foo:bar', $r->getUserAndPass());
 	}
