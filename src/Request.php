@@ -156,7 +156,7 @@ class Request
 		}
 
 		if (!$preserveCase) {
-			$key = strtolower($key):
+			$key = strtolower($key);
 		}
 		
 		$key = trim($key);
