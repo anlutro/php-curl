@@ -147,14 +147,19 @@ class Request
 	 *
 	 * @param string $key   Can also be a string in "foo: bar" format
 	 * @param mixed  $value
+	 * @param boolean  $preserveCase
 	 */
-	public function setHeader($key, $value = null)
+	public function setHeader($key, $value = null, $preserveCase = false)
 	{
 		if ($value === null) {
 			list($key, $value) = explode(':', $value, 2);
 		}
 
-		$key = strtolower(trim($key));
+		if (!$preserveCase) {
+			$key = strtolower($key);
+		}
+		
+		$key = trim($key);
 		$this->headers[$key] = trim($value);
 
 		return $this;
