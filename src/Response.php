@@ -1,7 +1,7 @@
 <?php
 /**
  * PHP OOP cURL
- *
+ * 
  * @author   Andreas Lutro <anlutro@gmail.com>
  * @license  http://opensource.org/licenses/MIT
  * @package  PHP cURL
@@ -19,7 +19,7 @@ class Response
 	 *
 	 * @var array
 	 */
-	public $headers = [];
+	public $headers = array();
 
 	/**
 	 * The response body.
@@ -54,7 +54,7 @@ class Response
 	 * @param string $headers
 	 * @param mixed  $info
 	 */
-	public function __construct($body, $headers, $info = [])
+	public function __construct($body, $headers, $info = array())
 	{
 		$this->body = json_decode($body);
 		$this->info = $info;
@@ -83,7 +83,7 @@ class Response
 	 */
 	protected function parseHeaders(array $headers)
 	{
-		$this->headers = [];
+		$this->headers = array();
 
 		// find and set the HTTP status code and reason
 		$firstHeader = array_shift($headers);
@@ -129,7 +129,7 @@ class Response
 				if (is_array($this->headers[$key])) {
 					$this->headers[$key][] = $val;
 				} else {
-					$this->headers[$key] = [$this->headers[$key], $val];
+					$this->headers[$key] = array($this->headers[$key], $val);
 				}
 			} else {
 				$this->headers[$key] = $val;
