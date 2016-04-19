@@ -171,7 +171,7 @@ class Response
 	{
 		return array(
 			'headers' => $this->headers,
-			'body' => $this->body,
+			'body' => json_decode($this->body),
 			'info' => $this->info
 		);
 	}
