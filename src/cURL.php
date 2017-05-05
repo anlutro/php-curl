@@ -281,6 +281,10 @@ class cURL
 		if ($this->methods[$method] === true) {
 			curl_setopt($this->ch, CURLOPT_POSTFIELDS, $request->encodeData());
 		}
+
+		if ($method === 'head') {
+			curl_setopt($this->ch, CURLOPT_NOBODY, true);
+		}
 	}
 
 	/**
