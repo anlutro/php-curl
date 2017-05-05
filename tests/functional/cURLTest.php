@@ -3,7 +3,7 @@
 /**
  * @group server
  */
-class cURLTest extends PHPUnit_Framework_TestCase
+class cURLTest extends PHPUnit\Framework\TestCase
 {
 	const URL = 'http://localhost:8080';
 
@@ -82,21 +82,21 @@ class cURLTest extends PHPUnit_Framework_TestCase
 	/** @test */
 	public function throwsExceptionOnCurlError()
 	{
-		$this->setExpectedException('anlutro\cURL\cURLException', 'cURL request failed with error [7]:');
+		$this->expectException('anlutro\cURL\cURLException', 'cURL request failed with error [7]:');
 		$this->makeCurl()->get('http://0.0.0.0');
 	}
 
 	/** @test */
 	public function throwsExceptionWithMissingUrl()
 	{
-		$this->setExpectedException('BadMethodCallException', 'Missing argument 1 ($url) for anlutro\cURL\cURL::get');
+		$this->expectException('BadMethodCallException', 'Missing argument 1 ($url) for anlutro\cURL\cURL::get');
 		$this->makeCurl()->get();
 	}
 
 	/** @test */
 	public function throwsExceptionWhenDataProvidedButNotAllowed()
 	{
-		$this->setExpectedException('InvalidArgumentException', 'HTTP method [options] does not allow POST data.');
+		$this->expectException('InvalidArgumentException', 'HTTP method [options] does not allow POST data.');
 		$this->makeCurl()->options('http://localhost', array('foo' => 'bar'));
 	}
 

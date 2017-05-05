@@ -2,7 +2,7 @@
 
 use anlutro\cURL\Response;
 
-class ResponseTest extends PHPUnit_Framework_TestCase
+class ResponseTest extends PHPUnit\Framework\TestCase
 {
 	private function makeResponse($body, $headers, $info = array())
 	{
@@ -51,7 +51,7 @@ class ResponseTest extends PHPUnit_Framework_TestCase
 	/** @test */
 	public function throwsExceptionIfHeaderDoesntStartWithHttpStatus()
 	{
-		$this->setExpectedException('InvalidArgumentException', 'Invalid response header');
+		$this->expectException('InvalidArgumentException', 'Invalid response header');
 		$this->makeResponse('', 'x-var: foo');
 	}
 }
