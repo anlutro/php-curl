@@ -164,6 +164,24 @@ class Request
 
 		return $this;
 	}
+	
+	/**
+	 * Set a specific header to be sent with the request.
+	 *
+	 * @param string $key   Can also be a string in "foo: bar" format
+	 * @param mixed  $value
+	 */
+	public function setRawHeader($key, $value = null)
+	{
+		if ($value === null) {
+			list($key, $value) = explode(':', $value, 2);
+		}
+
+		$key = trim($key);
+		$this->headers[$key] = trim($value);
+
+		return $this;
+	}
 
 	/**
 	 * Set the headers to be sent with the request.
