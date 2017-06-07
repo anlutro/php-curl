@@ -22,6 +22,21 @@ class Request
 	const ENCODING_RAW = 2;
 
 	/**
+	 * Allowed methods => allows postdata
+	 *
+	 * @var array
+	 */
+	public static $methods = array(
+		'get'     => false,
+		'head'    => false,
+		'post'    => true,
+		'put'     => true,
+		'patch'   => true,
+		'delete'  => false,
+		'options' => false,
+	);
+
+	/**
 	 * The HTTP method to use. Defaults to GET.
 	 *
 	 * @var string
@@ -101,8 +116,12 @@ class Request
 	{
 		$method = strtolower($method);
 
-		if (!array_key_exists($method, $this->curl->getAllowedMethods())) {
+		if (!array_key_exists($method, static::$methods)) {
 			throw new \InvalidArgumentException("Method [$method] not a valid HTTP method.");
+		}
+
+		if ($this->data && !static::$methods[$method]) {
+			throw new \LogicException('Request has POST data, but tried changing HTTP method to one that does not allow POST data');
 		}
 
 		$this->method = $method;
@@ -302,9 +321,23 @@ class Request
 	 */
 	public function setData($data)
 	{
+		if ($data && !static::$methods[$this->method]) {
+			throw new \InvalidArgumentException("HTTP method [$this->method] does not allow POST data.");
+		}
+
 		$this->data = $data;
 
 		return $this;
+	}
+
+	/**
+	 * Check whether the request has any data.
+	 *
+	 * @return boolean
+	 */
+	public function hasData()
+	{
+		return (bool) $this->data;
 	}
 
 	/**

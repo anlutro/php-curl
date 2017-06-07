@@ -39,21 +39,6 @@ class cURL
 	protected $ch;
 
 	/**
-	 * Allowed methods => allows postdata
-	 *
-	 * @var array
-	 */
-	protected $methods = array(
-		'get'     => false,
-		'head'    => false,
-		'post'    => true,
-		'put'     => true,
-		'patch'   => true,
-		'delete'  => false,
-		'options' => false,
-	);
-
-	/**
 	 * The request class to use.
 	 *
 	 * @var string
@@ -88,7 +73,7 @@ class cURL
 	 */
 	public function getAllowedMethods()
 	{
-		return $this->methods;
+		return Request::$methods;
 	}
 
 	/**
@@ -278,7 +263,7 @@ class cURL
 
 		curl_setopt($this->ch, CURLOPT_HTTPHEADER, $request->formatHeaders());
 
-		if ($this->methods[$method] === true) {
+		if ($request->hasData()) {
 			curl_setopt($this->ch, CURLOPT_POSTFIELDS, $request->encodeData());
 		}
 
@@ -358,7 +343,7 @@ class cURL
 			$method = substr($method, 3);
 		}
 
-		if (!array_key_exists($method, $this->methods)) {
+		if (!array_key_exists($method, Request::$methods)) {
 			throw new \BadMethodCallException("Method [$method] not a valid HTTP method.");
 		}
 
@@ -368,9 +353,6 @@ class cURL
 		$url = $args[0];
 
 		if (isset($args[1])) {
-			if (!$this->methods[$method]) {
-				throw new \InvalidArgumentException("HTTP method [$method] does not allow POST data.");
-			}
 			$data = $args[1];
 		} else {
 			$data = null;

@@ -37,6 +37,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
 	public function encodeData()
 	{
 		$r = $this->makeRequest();
+		$r->setMethod('post');
 
 		$r->setData(array('foo' => 'bar', 'bar' => 'baz'));
 		$this->assertEquals('foo=bar&bar=baz', $r->encodeData());
