@@ -32,7 +32,7 @@ class Request
 		'post'    => true,
 		'put'     => true,
 		'patch'   => true,
-		'delete'  => false,
+		'delete'  => true,
 		'options' => false,
 	);
 
