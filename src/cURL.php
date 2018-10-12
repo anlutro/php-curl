@@ -15,21 +15,21 @@ namespace anlutro\cURL;
  * @method Response get(string $url) Execute a GET request
  * @method Response delete(string $url) Execute a DELETE request
  * @method Response head(string $url) Execute a HEAD request
- * @method Response post(string $url, array $data) Execute a POST request
- * @method Response put(string $url, array $data) Execute a PUT request
- * @method Response patch(string $url, array $data) Execute a PATCH request
+ * @method Response post(string $url, mixed $data) Execute a POST request
+ * @method Response put(string $url, mixed $data) Execute a PUT request
+ * @method Response patch(string $url, mixed $data) Execute a PATCH request
  * @method Response jsonGet(string $url) Execute a JSON GET request
  * @method Response jsonDelete(string $url) Execute a JSON DELETE request
  * @method Response jsonHead(string $url) Execute a JSON HEAD request
- * @method Response jsonPost(string $url, array $data) Execute a JSON POST request
- * @method Response jsonPut(string $url, array $data) Execute a JSON PUT request
- * @method Response jsonPatch(string $url, array $data) Execute a JSON PATCH request
+ * @method Response jsonPost(string $url, mixed $data) Execute a JSON POST request
+ * @method Response jsonPut(string $url, mixed $data) Execute a JSON PUT request
+ * @method Response jsonPatch(string $url, mixed $data) Execute a JSON PATCH request
  * @method Response rawGet(string $url) Execute a raw GET request
  * @method Response rawDelete(string $url) Execute a raw DELETE request
  * @method Response rawHead(string $url) Execute a raw HEAD request
- * @method Response rawPost(string $url, array $data) Execute a raw POST request
- * @method Response rawPut(string $url, array $data) Execute a raw PUT request
- * @method Response rawPatch(string $url, array $data) Execute a raw PATCH request
+ * @method Response rawPost(string $url, mixed $data) Execute a raw POST request
+ * @method Response rawPut(string $url, mixed $data) Execute a raw PUT request
+ * @method Response rawPatch(string $url, mixed $data) Execute a raw PATCH request
  */
 class cURL
 {
@@ -209,11 +209,11 @@ class cURL
 	 *
 	 * @param  string $method  get, post etc
 	 * @param  string $url
-	 * @param  array  $data    POST data
+	 * @param  mixed  $data    POST data
 	 *
 	 * @return Request
 	 */
-	public function newJsonRequest($method, $url, array $data = array())
+	public function newJsonRequest($method, $url, $data = array())
 	{
 		return $this->newRequest($method, $url, $data, Request::ENCODING_JSON);
 	}

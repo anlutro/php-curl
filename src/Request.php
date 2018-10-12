@@ -67,7 +67,7 @@ class Request
 	/**
 	 * POST data sent with the request.
 	 *
-	 * @var array
+	 * @var mixed
 	 */
 	private $data = array();
 
@@ -343,7 +343,7 @@ class Request
 	/**
 	 * Get the POST data to be sent with the request.
 	 *
-	 * @return array
+	 * @return mixed
 	 */
 	public function getData()
 	{
