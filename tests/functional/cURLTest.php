@@ -59,6 +59,13 @@ class cURLTest extends PHPUnit_Framework_TestCase
 	}
 
 	/** @test */
+	public function jsonRequestEmptyBody()
+	{
+		$r = $this->makeCurl()->jsonPost(static::URL.'/echo.php', []);
+		$this->assertEquals('[]', $r->body);
+	}
+
+	/** @test */
 	public function rawRequestBody()
 	{
 		$r = $this->makeCurl()->rawPost(static::URL.'/echo.php', '<foo/>');

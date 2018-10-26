@@ -337,7 +337,7 @@ class Request
 	 */
 	public function hasData()
 	{
-		return (bool) $this->data;
+		return (bool) $this->encodeData();
 	}
 
 	/**

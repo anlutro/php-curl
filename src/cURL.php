@@ -355,7 +355,7 @@ class cURL
 		if (isset($args[1])) {
 			$data = $args[1];
 		} else {
-			$data = null;
+			$data = array();
 		}
 
 		$request = $this->newRequest($method, $url, $data, $encoding);
