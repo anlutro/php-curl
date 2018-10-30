@@ -51,6 +51,20 @@ class RequestTest extends PHPUnit_Framework_TestCase
 	}
 
 	/** @test */
+	public function encodeJsonData()
+	{
+		$r = $this->makeRequest();
+		$r->setMethod('post');
+		$r->setEncoding(Request::ENCODING_JSON);
+
+		$r->setData([]);
+		$this->assertEquals('[]', $r->encodeData());
+
+		$r->setData(new \stdClass);
+		$this->assertEquals('{}', $r->encodeData());
+	}
+
+	/** @test */
 	public function formatHeaders()
 	{
 		$r = $this->makeRequest();
