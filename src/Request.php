@@ -120,7 +120,7 @@ class Request
 			throw new \InvalidArgumentException("Method [$method] not a valid HTTP method.");
 		}
 
-		if ($this->data && !static::$methods[$method]) {
+		if ($this->data && !$this->allowsData()) {
 			throw new \LogicException('Request has POST data, but tried changing HTTP method to one that does not allow POST data');
 		}
 
@@ -315,13 +315,23 @@ class Request
 	}
 
 	/**
+	 * Detemine if a request allows data to be set.
+	 *
+	 * @return bool
+	 */
+	public function allowsData()
+	{
+		return static::$methods[$this->method];
+	}
+
+	/**
 	 * Set the POST data to be sent with the request.
 	 *
 	 * @param mixed $data
 	 */
 	public function setData($data)
 	{
-		if ($data && !static::$methods[$this->method]) {
+		if (!$this->allowsData()) {
 			throw new \InvalidArgumentException("HTTP method [$this->method] does not allow POST data.");
 		}
 
