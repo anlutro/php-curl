@@ -264,7 +264,7 @@ class cURL
 		curl_setopt($this->ch, CURLOPT_HTTPHEADER, $request->formatHeaders());
 
 		if ($request->hasData()) {
-			curl_setopt($this->ch, CURLOPT_POSTFIELDS, $request->encodeData());
+			curl_setopt($this->ch, CURLOPT_POSTFIELDS, $request->getEncodedData());
 		}
 
 		if ($method === 'head') {

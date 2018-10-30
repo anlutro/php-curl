@@ -100,6 +100,13 @@ class Request
 	private $encoding = Request::ENCODING_QUERY;
 
 	/**
+	 * Cache of encoded data.
+	 *
+	 * @var string|null
+	 */
+	private $encodedData = null;
+
+	/**
 	 * @param cURL $curl
 	 */
 	public function __construct(cURL $curl)
@@ -336,6 +343,7 @@ class Request
 		}
 
 		$this->data = $data;
+		$this->encodedData = null;
 
 		return $this;
 	}
@@ -382,6 +390,7 @@ class Request
 		}
 
 		$this->encoding = $encoding;
+		$this->encodedData = null;
 
 		return $this;
 	}
@@ -403,6 +412,10 @@ class Request
 	 */
 	public function encodeData()
 	{
+		if ($this->data === null) {
+			return '';
+		}
+
 		switch ($this->encoding) {
 			case static::ENCODING_JSON:
 				return json_encode($this->data);
@@ -413,6 +426,19 @@ class Request
 			default:
 				throw new \UnexpectedValueException("Encoding [$encoding] not a known Request::ENCODING_* constant");
 		}
+	}
+
+	/**
+	 * Get the encoded POST data as a string.
+	 *
+	 * @return string
+	 */
+	public function getEncodedData()
+	{
+		if ($this->encodedData === null) {
+			$this->encodedData = $this->encodeData();
+		}
+		return $this->encodedData;
 	}
 
 	/**
