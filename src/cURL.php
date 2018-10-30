@@ -198,11 +198,8 @@ class cURL
 		}
 		$request->setMethod($method);
 		$request->setUrl($url);
+		$request->setData($data);
 		$request->setEncoding($encoding);
-
-		if ($data !== null) {
-			$request->setData($data);
-		}
 
 		return $request;
 	}
