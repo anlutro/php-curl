@@ -338,7 +338,7 @@ class Request
 	 */
 	public function setData($data)
 	{
-		if (!$this->allowsData()) {
+		if ($data !== null && !$this->allowsData()) {
 			throw new \InvalidArgumentException("HTTP method [$this->method] does not allow POST data.");
 		}
 
