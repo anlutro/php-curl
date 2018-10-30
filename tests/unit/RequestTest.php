@@ -65,6 +65,36 @@ class RequestTest extends PHPUnit_Framework_TestCase
 	}
 
 	/** @test */
+	public function changeDataUpdatesEncodedData()
+	{
+		$r = $this->makeRequest();
+		$r->setMethod('post');
+		$r->setEncoding(Request::ENCODING_JSON);
+
+		$r->setData(['foo' => 'bar']);
+		$data1 = $r->getEncodedData();
+		$r->setData(['bar' => 'qux']);
+		$data2 = $r->getEncodedData();
+
+		$this->assertNotEquals($data1, $data2);
+	}
+
+	/** @test */
+	public function changeEncodingUpdatesEncodedData()
+	{
+		$r = $this->makeRequest();
+		$r->setMethod('post');
+		$r->setData(['foo' => 'bar']);
+
+		$r->setEncoding(Request::ENCODING_JSON);
+		$jsonData = $r->getEncodedData();
+		$r->setEncoding(Request::ENCODING_QUERY);
+		$queryData = $r->getEncodedData();
+
+		$this->assertNotEquals($jsonData, $queryData);
+	}
+
+	/** @test */
 	public function formatHeaders()
 	{
 		$r = $this->makeRequest();
