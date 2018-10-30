@@ -185,7 +185,7 @@ class cURL
 	 *
 	 * @return Request
 	 */
-	public function newRequest($method, $url, $data = array(), $encoding = Request::ENCODING_QUERY)
+	public function newRequest($method, $url, $data = null, $encoding = Request::ENCODING_QUERY)
 	{
 		$class = $this->requestClass;
 		$request = new $class($this);
@@ -198,8 +198,11 @@ class cURL
 		}
 		$request->setMethod($method);
 		$request->setUrl($url);
-		$request->setData($data);
 		$request->setEncoding($encoding);
+
+		if ($data !== null) {
+			$request->setData($data);
+		}
 
 		return $request;
 	}
