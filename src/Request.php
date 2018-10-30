@@ -100,6 +100,13 @@ class Request
 	private $encoding = Request::ENCODING_QUERY;
 
 	/**
+	 * Cache of encoded data.
+	 *
+	 * @var string|null
+	 */
+	private $encodedData = null;
+
+	/**
 	 * @param cURL $curl
 	 */
 	public function __construct(cURL $curl)
@@ -120,7 +127,7 @@ class Request
 			throw new \InvalidArgumentException("Method [$method] not a valid HTTP method.");
 		}
 
-		if ($this->data && !static::$methods[$method]) {
+		if ($this->data && !$this->allowsData()) {
 			throw new \LogicException('Request has POST data, but tried changing HTTP method to one that does not allow POST data');
 		}
 
@@ -315,17 +322,28 @@ class Request
 	}
 
 	/**
+	 * Detemine if a request allows data to be set.
+	 *
+	 * @return bool
+	 */
+	public function allowsData()
+	{
+		return static::$methods[$this->method];
+	}
+
+	/**
 	 * Set the POST data to be sent with the request.
 	 *
 	 * @param mixed $data
 	 */
 	public function setData($data)
 	{
-		if ($data && !static::$methods[$this->method]) {
+		if ($data !== null && !$this->allowsData()) {
 			throw new \InvalidArgumentException("HTTP method [$this->method] does not allow POST data.");
 		}
 
 		$this->data = $data;
+		$this->encodedData = null;
 
 		return $this;
 	}
@@ -337,7 +355,7 @@ class Request
 	 */
 	public function hasData()
 	{
-		return (bool) $this->data;
+		return (bool) $this->getEncodedData();
 	}
 
 	/**
@@ -372,6 +390,7 @@ class Request
 		}
 
 		$this->encoding = $encoding;
+		$this->encodedData = null;
 
 		return $this;
 	}
@@ -393,6 +412,10 @@ class Request
 	 */
 	public function encodeData()
 	{
+		if ($this->data === null) {
+			return '';
+		}
+
 		switch ($this->encoding) {
 			case static::ENCODING_JSON:
 				return json_encode($this->data);
@@ -403,6 +426,19 @@ class Request
 			default:
 				throw new \UnexpectedValueException("Encoding [$encoding] not a known Request::ENCODING_* constant");
 		}
+	}
+
+	/**
+	 * Get the encoded POST data as a string.
+	 *
+	 * @return string
+	 */
+	public function getEncodedData()
+	{
+		if ($this->encodedData === null) {
+			$this->encodedData = $this->encodeData();
+		}
+		return $this->encodedData;
 	}
 
 	/**

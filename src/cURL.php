@@ -185,7 +185,7 @@ class cURL
 	 *
 	 * @return Request
 	 */
-	public function newRequest($method, $url, $data = array(), $encoding = Request::ENCODING_QUERY)
+	public function newRequest($method, $url, $data = null, $encoding = Request::ENCODING_QUERY)
 	{
 		$class = $this->requestClass;
 		$request = new $class($this);
@@ -264,7 +264,7 @@ class cURL
 		curl_setopt($this->ch, CURLOPT_HTTPHEADER, $request->formatHeaders());
 
 		if ($request->hasData()) {
-			curl_setopt($this->ch, CURLOPT_POSTFIELDS, $request->encodeData());
+			curl_setopt($this->ch, CURLOPT_POSTFIELDS, $request->getEncodedData());
 		}
 
 		if ($method === 'head') {
