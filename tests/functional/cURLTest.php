@@ -52,6 +52,20 @@ class cURLTest extends PHPUnit_Framework_TestCase
 	}
 
 	/** @test */
+	public function queryRequestEmptyArrayBody()
+	{
+		$r = $this->makeCurl()->post(static::URL.'/echo.php', array());
+		$this->assertEquals('', $r->body);
+	}
+
+	/** @test */
+	public function queryRequestEmptyObjectBody()
+	{
+		$r = $this->makeCurl()->post(static::URL.'/echo.php', new \stdClass());
+		$this->assertEquals('', $r->body);
+	}
+
+	/** @test */
 	public function jsonRequestBody()
 	{
 		$r = $this->makeCurl()->jsonPost(static::URL.'/echo.php', array('foo' => 'bar'));
@@ -59,10 +73,31 @@ class cURLTest extends PHPUnit_Framework_TestCase
 	}
 
 	/** @test */
+	public function jsonRequestEmptyArrayBody()
+	{
+		$r = $this->makeCurl()->jsonPost(static::URL.'/echo.php', array());
+		$this->assertEquals('[]', $r->body);
+	}
+
+	/** @test */
+	public function jsonRequestEmptyObjectBody()
+	{
+		$r = $this->makeCurl()->jsonPost(static::URL.'/echo.php', new \stdClass());
+		$this->assertEquals('{}', $r->body);
+	}
+
+	/** @test */
 	public function rawRequestBody()
 	{
 		$r = $this->makeCurl()->rawPost(static::URL.'/echo.php', '<foo/>');
 		$this->assertEquals('<foo/>', $r->body);
+	}
+
+	/** @test */
+	public function rawRequestEmptyBody()
+	{
+		$r = $this->makeCurl()->rawPost(static::URL.'/echo.php', '');
+		$this->assertEquals('', $r->body);
 	}
 
 	/** @test */

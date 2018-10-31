@@ -337,7 +337,7 @@ class Request
 	 */
 	public function hasData()
 	{
-		return (bool) $this->data;
+		return (bool) $this->encodeData();
 	}
 
 	/**
@@ -397,7 +397,7 @@ class Request
 			case static::ENCODING_JSON:
 				return json_encode($this->data);
 			case static::ENCODING_QUERY:
-				return http_build_query($this->data);
+				return (!is_null($this->data) ? http_build_query($this->data) : '');
 			case static::ENCODING_RAW:
 				return $this->data;
 			default:
