@@ -255,11 +255,7 @@ class cURL
 		}
 
 		$method = $request->getMethod();
-		if ($method === 'post') {
-			curl_setopt($this->ch, CURLOPT_POST, 1);
-		} elseif ($method !== 'get') {
-			curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, strtoupper($method));
-		}
+		curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, strtoupper($method));
 
 		curl_setopt($this->ch, CURLOPT_HTTPHEADER, $request->formatHeaders());
 
@@ -355,7 +351,7 @@ class cURL
 		if (isset($args[1])) {
 			$data = $args[1];
 		} else {
-			$data = array();
+			$data = null;
 		}
 
 		$request = $this->newRequest($method, $url, $data, $encoding);
