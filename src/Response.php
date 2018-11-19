@@ -87,7 +87,7 @@ class Response
 
 		// find and set the HTTP status code and reason
 		$firstHeader = array_shift($headers);
-		if (!preg_match('/^HTTP\/\d\.\d [0-9]{3}/', $firstHeader)) {
+		if (!preg_match('/^HTTP\/\d(\.\d)? [0-9]{3}/', $firstHeader)) {
 			throw new \InvalidArgumentException('Invalid response header');
 		}
 		list(, $status) = explode(' ', $firstHeader, 2);

@@ -22,6 +22,14 @@ class ResponseTest extends PHPUnit_Framework_TestCase
 	}
 
 	/** @test */
+	public function parsesHttp2ResponseCorrectly()
+	{
+		$r = $this->makeResponse('', 'HTTP/2 200 OK');
+		$this->assertEquals(200, $r->statusCode);
+		$this->assertEquals('200 OK', $r->statusText);
+	}
+
+	/** @test */
 	public function parsesHeaderStringCorrectly()
 	{
 		$header = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 0";
