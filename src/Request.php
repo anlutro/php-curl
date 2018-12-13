@@ -401,7 +401,8 @@ class Request
 			case static::ENCODING_RAW:
 				return $this->data;
 			default:
-				throw new \UnexpectedValueException("Encoding [$encoding] not a known Request::ENCODING_* constant");
+				$msg = "Encoding [" . $this->encoding . "] not a known Request::ENCODING_* constant";
+				throw new \UnexpectedValueException($msg);
 		}
 	}
 
