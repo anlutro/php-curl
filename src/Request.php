@@ -337,7 +337,7 @@ class Request
 	 */
 	public function hasData()
 	{
-		return (bool) $this->encodeData();
+		return static::$methods[$this->method] && (bool) $this->encodeData();
 	}
 
 	/**
@@ -401,7 +401,7 @@ class Request
 			case static::ENCODING_RAW:
 				return $this->data;
 			default:
-				$msg = "Encoding [" . $this->encoding . "] not a known Request::ENCODING_* constant";
+				$msg = "Encoding [$this->encoding] not a known Request::ENCODING_* constant";
 				throw new \UnexpectedValueException($msg);
 		}
 	}

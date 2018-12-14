@@ -124,4 +124,14 @@ class RequestTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('foo', $r->getCookie('baz'));
 		$this->assertEquals('baz=foo', $r->getHeader('cookie'));
 	}
+
+	/** @test */
+	public function emptyJsonGetRequestHasNoData()
+	{
+		$r = $this->makeRequest();
+		$r->setEncoding(Request::ENCODING_JSON);
+		$r->setMethod('get');
+
+		$this->assertFalse($r->hasData());
+	}
 }
