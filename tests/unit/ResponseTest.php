@@ -57,6 +57,15 @@ class ResponseTest extends PHPUnit_Framework_TestCase
 	}
 
 	/** @test */
+	public function httpUnauthorizedResponsesContainingMultipleStatusesAreHandled()
+	{
+		$header = "HTTP/1.1 401 Unauthorized\r\nx-var: foo\r\n\r\nHTTP/1.1 200 OK\r\nx-var: bar";
+		$r = $this->makeResponse('', $header);
+		$this->assertEquals(200, $r->statusCode);
+		$this->assertEquals('bar', $r->getHeader('x-var'));
+	}
+
+	/** @test */
 	public function throwsExceptionIfHeaderDoesntStartWithHttpStatus()
 	{
 		$this->setExpectedException('InvalidArgumentException', 'Invalid response header');

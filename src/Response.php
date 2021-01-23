@@ -108,6 +108,20 @@ class Response
 			return $this->parseHeaders($headers);
 		}
 
+		// special handling for HTTP 401 responses containing multiple statuses (e.g. digest authentication)
+		if ($code === 401 && !empty(preg_grep('/^HTTP\/\d(\.\d)? [0-9]{3}/', $headers))) {
+			// remove header lines between 401 and actual HTTP status
+			foreach ($headers as $key => $header) {
+				if (preg_match('/^HTTP\/\d(\.\d)? [0-9]{3}/', $header)) {
+					break;
+				}
+				unset($headers[$key]);
+			}
+
+			// start the process over with the 401 unauthorized header stripped away
+			return $this->parseHeaders($headers);
+		}
+
 		$this->statusText = $status;
 		$this->statusCode = $code;
 
