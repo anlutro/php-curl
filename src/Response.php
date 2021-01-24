@@ -109,7 +109,11 @@ class Response
 
 		// handle cases where CURLOPT_HTTPAUTH is being used, in which case
 		// curl_exec may cause two HTTP responses
-		if ($this->info[CURLINFO_HTTPAUTH_AVAIL] > 0 && $code === 401) {
+		if (
+			array_key_exists(CURLINFO_HTTPAUTH_AVAIL, $this->info) &&
+			$this->info[CURLINFO_HTTPAUTH_AVAIL] > 0 &&
+			$code === 401
+		) {
 			$foundAuthenticateHeader = false;
 			$foundSecondHttpResponse = false;
 			foreach ($headers as $idx => $header) {
