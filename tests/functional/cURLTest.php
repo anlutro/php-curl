@@ -115,6 +115,17 @@ class cURLTest extends PHPUnit_Framework_TestCase
 	}
 
 	/** @test */
+	public function digestAuth()
+	{
+		$curl = $this->makeCurl();
+		$request = $curl->newRequest('get', static::URL . '/digest-auth.php');
+		$request->auth('guest', 'guest');
+		$request->setOption(CURLOPT_HTTPAUTH, CURLAUTH_DIGEST);
+		$response = $curl->sendRequest($request);
+		$this->assertEquals(200, $response->statusCode);
+	}
+
+	/** @test */
 	public function throwsExceptionOnCurlError()
 	{
 		$this->setExpectedException('anlutro\cURL\cURLException', 'cURL request failed with error [7]:');
@@ -140,7 +151,7 @@ class cURLTest extends PHPUnit_Framework_TestCase
 	{
 		$curl = $this->makeCurl();
 		$curl->setDefaultHeaders(array('foo' => 'bar'));
-		$request = $curl->newRequest('post', 'localhost');
+		$request = $curl->newRequest('post', 'does-not-matter');
 		$this->assertEquals('bar', $request->getHeader('foo'));
 	}
 
@@ -149,7 +160,7 @@ class cURLTest extends PHPUnit_Framework_TestCase
 	{
 		$curl = $this->makeCurl();
 		$curl->setDefaultOptions(array('foo' => 'bar'));
-		$request = $curl->newRequest('post', 'localhost');
+		$request = $curl->newRequest('post', 'does-not-matter');
 		$this->assertEquals('bar', $request->getOption('foo'));
 	}
 }

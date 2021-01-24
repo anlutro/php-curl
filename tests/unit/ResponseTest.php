@@ -62,4 +62,13 @@ class ResponseTest extends PHPUnit_Framework_TestCase
 		$this->setExpectedException('InvalidArgumentException', 'Invalid response header');
 		$this->makeResponse('', 'x-var: foo');
 	}
+
+	/** @test */
+	public function httpUnauthorizedResponsesContainingMultipleStatusesAreHandled()
+	{
+		$header = "HTTP/1.1 401 Unauthorized\r\nwww-authenticate: digest something\r\n\r\nHTTP/1.1 200 OK\r\nx-var: foo";
+		$r = $this->makeResponse('', $header, [CURLINFO_HTTPAUTH_AVAIL => CURLAUTH_DIGEST]);
+		$this->assertEquals(200, $r->statusCode);
+		$this->assertEquals('foo', $r->getHeader('x-var'));
+	}
 }

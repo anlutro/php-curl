@@ -97,15 +97,36 @@ class Response
 		// special handling for HTTP 100 responses
 		if ($code === 100) {
 			// remove empty header lines between 100 and actual HTTP status
-			foreach ($headers as $key => $header) {
+			foreach ($headers as $idx => $header) {
 				if ($header) {
 					break;
 				}
-				unset($headers[$key]);
 			}
 
 			// start the process over with the 100 continue header stripped away
-			return $this->parseHeaders($headers);
+			return $this->parseHeaders(array_slice($headers, $idx));
+		}
+
+		// handle cases where CURLOPT_HTTPAUTH is being used, in which case
+		// curl_exec may cause two HTTP responses
+		if ($this->info[CURLINFO_HTTPAUTH_AVAIL] > 0 && $code === 401) {
+			$foundAuthenticateHeader = false;
+			$foundSecondHttpResponse = false;
+			foreach ($headers as $idx => $header) {
+				if ($foundAuthenticateHeader === false && strpos(strtolower($header), 'www-authenticate:') === 0) {
+					$foundAuthenticateHeader = true;
+				}
+				if ($foundAuthenticateHeader && preg_match('/^HTTP\/\d(\.\d)? [0-9]{3}/', $header)) {
+					$foundSecondHttpResponse = true;
+					break;
+				}
+			}
+
+			// discard the original response.
+			if ($foundAuthenticateHeader && $foundSecondHttpResponse) {
+				$headers = array_slice($headers, $idx);
+				return $this->parseHeaders($headers);
+			}
 		}
 
 		$this->statusText = $status;
