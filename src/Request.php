@@ -409,8 +409,8 @@ class Request
 	/**
 	 * Set a specific curl option for the request.
 	 *
-	 * @param string $key
-	 * @param mixed  $value
+	 * @param int   $key
+	 * @param mixed $value
 	 */
 	public function setOption($key, $value)
 	{
@@ -434,7 +434,7 @@ class Request
 	/**
 	 * Get a specific curl option from the request.
 	 *
-	 * @param  string $key
+	 * @param  int $key
 	 *
 	 * @return mixed
 	 */
