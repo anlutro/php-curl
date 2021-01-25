@@ -308,6 +308,8 @@ class cURL
 	{
 		$info = curl_getinfo($this->ch);
 		$headerSize = curl_getinfo($this->ch, CURLINFO_HEADER_SIZE);
+		// needed for the Response class to know that it may have to parse 2 HTTP responses
+		$info[CURLINFO_HTTPAUTH_AVAIL] = curl_getinfo($this->ch, CURLINFO_HTTPAUTH_AVAIL);
 
 		$headers = substr($response, 0, $headerSize);
 		$body = substr($response, $headerSize);
