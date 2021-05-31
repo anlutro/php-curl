@@ -289,10 +289,7 @@ class cURL
 			throw new cURLException($request, $msg, $errno);
 		}
 
-		$response = null;
-		if ($request->getOption(CURLOPT_FILE) === null) {
-			$response = $this->createResponseObject($result);
-		}
+		$response = $this->createResponseObject($result, $request);
 
 		curl_close($this->ch);
 
@@ -303,19 +300,33 @@ class cURL
 	 * Extract the response info, header and body from a cURL response. Saves
 	 * the data in variables stored on the object.
 	 *
-	 * @param  string $response
+	 * @param  string  $response
+	 * @param  Request $request
 	 *
 	 * @return Response
 	 */
-	protected function createResponseObject($response)
+	protected function createResponseObject($response, Request $request)
 	{
 		$info = curl_getinfo($this->ch);
 		$headerSize = curl_getinfo($this->ch, CURLINFO_HEADER_SIZE);
 		// needed for the Response class to know that it may have to parse 2 HTTP responses
 		$info[CURLINFO_HTTPAUTH_AVAIL] = curl_getinfo($this->ch, CURLINFO_HTTPAUTH_AVAIL);
 
-		$headers = substr($response, 0, $headerSize);
-		$body = substr($response, $headerSize);
+		if ($file = $request->getOption(CURLOPT_FILE)) {
+			// TODO: is this even possible?
+			if (!is_resource($file)) {
+				$file = fopen($file, "r");
+			}
+			// TODO: what if resource isn't seekable? e.g. network socket?
+			$oldPosition = ftell($file);
+			fseek($file, 0);
+			$headers = fread($file, $headerSize);
+			fseek($file, $oldPosition);
+			$body = null;
+		} else {
+			$headers = substr($response, 0, $headerSize);
+			$body = substr($response, $headerSize);
+		}
 
 		$class = $this->responseClass;
 

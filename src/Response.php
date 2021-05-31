@@ -24,7 +24,7 @@ class Response
 	/**
 	 * The response body.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	public $body;
 
@@ -50,9 +50,9 @@ class Response
 	public $statusCode;
 
 	/**
-	 * @param string $body
-	 * @param string $headers
-	 * @param mixed  $info
+	 * @param string|null $body
+	 * @param string      $headers
+	 * @param mixed       $info
 	 */
 	public function __construct($body, $headers, $info = array())
 	{
@@ -188,6 +188,21 @@ class Response
 	}
 
 	/**
+	 * Get the response body.
+	 *
+	 * @return string
+	 */
+	public function getBody()
+	{
+		// usually because CURLOPT_FILE is set
+		if ($this->body === null) {
+			throw new \UnexpectedValueException("Response has no body!")
+		}
+
+		return $this->body;
+	}
+
+	/**
 	 * Convert the response instance to an array.
 	 *
 	 * @return array
@@ -218,6 +233,6 @@ class Response
 	 */
 	public function __toString()
 	{
-		return $this->body;
+		return (string) $this->getBody();
 	}
 }
