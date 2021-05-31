@@ -289,7 +289,10 @@ class cURL
 			throw new cURLException($request, $msg, $errno);
 		}
 
-		$response = $this->createResponseObject($result);
+		$response = null;
+		if ($request->getOption(CURLOPT_FILE) === null) {
+			$response = $this->createResponseObject($result);
+		}
 
 		curl_close($this->ch);
 
