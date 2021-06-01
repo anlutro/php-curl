@@ -196,7 +196,7 @@ class Response
 	{
 		// usually because CURLOPT_FILE is set
 		if ($this->body === null) {
-			throw new \UnexpectedValueException("Response has no body!")
+			throw new \UnexpectedValueException("Response has no body!");
 		}
 
 		return $this->body;
