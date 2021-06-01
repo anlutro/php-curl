@@ -163,4 +163,18 @@ class cURLTest extends PHPUnit_Framework_TestCase
 		$request = $curl->newRequest('post', 'does-not-matter');
 		$this->assertEquals('bar', $request->getOption('foo'));
 	}
+
+	/** @test */
+	public function curloptFileWorks()
+	{
+		$r = $this->makeCurl()
+			->newRequest('get', static::URL.'/success.php')
+			->setOption(CURLOPT_FILE, tmpfile())
+			->send();
+		$this->assertEquals(200, $r->statusCode);
+		$this->assertEquals('200 OK', $r->statusText);
+		$this->assertNotNull($r->headers);
+		$this->assertNotNull($r->info);
+		$this->assertNull($r->body);
+	}
 }
