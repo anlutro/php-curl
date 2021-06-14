@@ -313,15 +313,12 @@ class cURL
 		$info[CURLINFO_HTTPAUTH_AVAIL] = curl_getinfo($this->ch, CURLINFO_HTTPAUTH_AVAIL);
 
 		if ($file = $request->getOption(CURLOPT_FILE)) {
-			// TODO: is this even possible?
-			if (!is_resource($file)) {
-				$file = fopen($file, "r");
-			}
-			// TODO: what if resource isn't seekable? e.g. network socket?
-			$oldPosition = ftell($file);
-			fseek($file, 0);
+			// file may be opened write-only, and even when it isn't,
+			// seeking/reading seems to be buggy
+			$fileMeta = stream_get_meta_data($file);
+			$file = fopen($fileMeta['uri'], 'r');
 			$headers = fread($file, $headerSize);
-			fseek($file, $oldPosition);
+			fclose($file);
 			$body = null;
 		} else {
 			$headers = substr($response, 0, $headerSize);
