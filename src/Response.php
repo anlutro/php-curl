@@ -70,6 +70,9 @@ class Response
 	 */
 	protected function parseHeader($header)
 	{
+		if ($header === "") {
+			throw new \UnexpectedValueException('Empty header string passed!');
+		}
 		$headers = explode("\r\n", trim($header));
 		$this->parseHeaders($headers);
 	}
@@ -83,12 +86,16 @@ class Response
 	 */
 	protected function parseHeaders(array $headers)
 	{
+		if (count($headers) === 0) {
+			throw new \UnexpectedValueException('No headers passed!');
+		}
+
 		$this->headers = array();
 
 		// find and set the HTTP status code and reason
 		$firstHeader = array_shift($headers);
 		if (!preg_match('/^HTTP\/\d(\.\d)? [0-9]{3}/', $firstHeader)) {
-			throw new \InvalidArgumentException('Invalid response header');
+			throw new \UnexpectedValueException('Invalid response header');
 		}
 		list(, $status) = explode(' ', $firstHeader, 2);
 		$code = explode(' ', $status);
