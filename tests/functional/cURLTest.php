@@ -169,7 +169,7 @@ class cURLTest extends PHPUnit_Framework_TestCase
 	{
 		$r = $this->makeCurl()
 			->newRequest('get', static::URL.'/success.php')
-			->setOption(CURLOPT_FILE, tmpfile())
+			->setOption(CURLOPT_FILE, $fh = tmpfile())
 			->send();
 		$this->assertEquals(200, $r->statusCode);
 		$this->assertEquals('200 OK', $r->statusText);

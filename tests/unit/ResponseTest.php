@@ -59,7 +59,7 @@ class ResponseTest extends PHPUnit_Framework_TestCase
 	/** @test */
 	public function throwsExceptionIfHeaderDoesntStartWithHttpStatus()
 	{
-		$this->setExpectedException('InvalidArgumentException', 'Invalid response header');
+		$this->setExpectedException('UnexpectedValueException', 'Invalid response header');
 		$this->makeResponse('', 'x-var: foo');
 	}
 
