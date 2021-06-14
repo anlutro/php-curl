@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if [ "$TRAVIS_PHP_VERSION" = "" ]; then
-	php_version=$(php --version | grep -oh -P 'PHP (\d\.\d)' | sed 's/PHP //')
+	php_version=$(php --version | grep -oh 'PHP ([0-9]\.[0-9])' | sed 's/PHP //')
 else
 	php_version=$TRAVIS_PHP_VERSION
 fi
