@@ -56,7 +56,7 @@ class Response
 	 */
 	public function __construct($body, $headers, $info = array())
 	{
-		$this->body = $body;
+		$this->body = json_decode($body);
 		$this->info = $info;
 		$this->parseHeader($headers);
 	}
@@ -218,7 +218,7 @@ class Response
 	{
 		return array(
 			'headers' => $this->headers,
-			'body' => $this->body,
+			'body' => json_decode($this->body),
 			'info' => $this->info
 		);
 	}
