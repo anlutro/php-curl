@@ -23,6 +23,7 @@ jobs:
           - '7.0'
           - '7.1'
           - '7.2'
+          - '8.0'
     steps:
       - uses: actions/checkout@v2
       - uses: shivammathur/setup-php@v2
