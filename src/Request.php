@@ -36,6 +36,13 @@ class Request
 		'options' => false,
 	);
 
+    /**
+     * cURL wrapper instance
+     *
+     * @var cURL
+     */
+    private $curl;
+
 	/**
 	 * The HTTP method to use. Defaults to GET.
 	 *
