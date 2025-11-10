@@ -285,13 +285,13 @@ class cURL
 			$errno = curl_errno($this->ch);
 			$errmsg = curl_error($this->ch);
 			$msg = "cURL request failed with error [$errno]: $errmsg";
-			curl_close($this->ch);
+			$this->curlClose();
 			throw new cURLException($request, $msg, $errno);
 		}
 
 		$response = $this->createResponseObject($result, $request);
 
-		curl_close($this->ch);
+		$this->curlClose();
 
 		return $response;
 	}
@@ -370,5 +370,17 @@ class cURL
 		$request = $this->newRequest($method, $url, $data, $encoding);
 
 		return $this->sendRequest($request);
+	}
+
+	/**
+	 * Closes curl.
+	 * Calls curl_close($this->ch) in php versions when it's relevant
+	 *
+	 * @return void
+	 */
+	private function curlClose() {
+		if (version_compare(PHP_VERSION, "8.0.0", ">="))
+			return;
+		curl_close($this->ch);
 	}
 }
