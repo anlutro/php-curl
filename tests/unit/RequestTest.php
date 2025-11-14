@@ -1,15 +1,17 @@
 <?php
 
 use anlutro\cURL\Request;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
-class RequestTest extends PHPUnit_Framework_TestCase
+class RequestTest extends TestCase
 {
 	private function makeRequest($curl = null)
 	{
 		return new Request($curl ?: new \anlutro\cURL\cURL);
 	}
 
-	/** @test */
+	#[Test]
 	public function settersAndGetters()
 	{
 		$r = $this->makeRequest();
@@ -33,7 +35,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(array('baz' => 'foo', 'bar' => 'baz'), $r->getHeaders());
 	}
 
-	/** @test */
+	#[Test]
 	public function encodeData()
 	{
 		$r = $this->makeRequest();
@@ -50,7 +52,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('<rawData>ArbitraryValue</rawData>', $r->encodeData());
 	}
 
-	/** @test */
+	#[Test]
 	public function formatHeaders()
 	{
 		$r = $this->makeRequest();
@@ -62,7 +64,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(array('foo: bar', 'bar: baz'), $r->formatHeaders());
 	}
 
-	/** @test */
+	#[Test]
 	public function headersAreCaseInsensitive()
 	{
 		$r = $this->makeRequest();
@@ -91,7 +93,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
 		$this->makeRequest()->setEncoding(999);
 	}
 
-	/** @test */
+	#[Test]
 	public function userAndPass()
 	{
 		$r = $this->makeRequest();
@@ -102,7 +104,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('foo:bar', $r->getUserAndPass());
 	}
 
-	/** @test */
+	#[Test]
 	public function cookies()
 	{
 		$r = $this->makeRequest();
@@ -125,7 +127,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('baz=foo', $r->getHeader('cookie'));
 	}
 
-	/** @test */
+	#[Test]
 	public function emptyJsonGetRequestHasNoData()
 	{
 		$r = $this->makeRequest();

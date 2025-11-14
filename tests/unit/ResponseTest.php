@@ -1,15 +1,17 @@
 <?php
 
 use anlutro\cURL\Response;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
-class ResponseTest extends PHPUnit_Framework_TestCase
+class ResponseTest extends TestCase
 {
 	private function makeResponse($body, $headers, $info = array())
 	{
 		return new Response($body, $headers, $info);
 	}
 
-	/** @test */
+	#[Test]
 	public function parsesHttpResponseCodeCorrectly()
 	{
 		$r = $this->makeResponse('', 'HTTP/1.1 200 OK');
@@ -21,7 +23,7 @@ class ResponseTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('302 Found', $r->statusText);
 	}
 
-	/** @test */
+	#[Test]
 	public function parsesHttp2ResponseCorrectly()
 	{
 		$r = $this->makeResponse('', 'HTTP/2 200');
@@ -29,7 +31,7 @@ class ResponseTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('200', $r->statusText);
 	}
 
-	/** @test */
+	#[Test]
 	public function parsesHeaderStringCorrectly()
 	{
 		$header = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 0";
@@ -39,7 +41,7 @@ class ResponseTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(null, $r->getHeader('x-nonexistant'));
 	}
 
-	/** @test */
+	#[Test]
 	public function duplicateHeadersAreHandled()
 	{
 		$header = "HTTP/1.1 200 OK\r\nX-Var: A\r\nX-Var: B\r\nX-Var: C";
@@ -47,7 +49,7 @@ class ResponseTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(array('A', 'B', 'C'), $r->getHeader('X-Var'));
 	}
 
-	/** @test */
+	#[Test]
 	public function httpContinueResponsesAreHandled()
 	{
 		$header = "HTTP/1.1 100 Continue\r\n\r\nHTTP/1.1 200 OK\r\nx-var: foo";
@@ -56,14 +58,14 @@ class ResponseTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('foo', $r->getHeader('x-var'));
 	}
 
-	/** @test */
+	#[Test]
 	public function throwsExceptionIfHeaderDoesntStartWithHttpStatus()
 	{
-		$this->setExpectedException('UnexpectedValueException', 'Invalid response header');
+		$this->expectException('UnexpectedValueException', 'Invalid response header');
 		$this->makeResponse('', 'x-var: foo');
 	}
 
-	/** @test */
+	#[Test]
 	public function httpUnauthorizedResponsesContainingMultipleStatusesAreHandled()
 	{
 		$header = "HTTP/1.1 401 Unauthorized\r\nwww-authenticate: digest something\r\n\r\nHTTP/1.1 200 OK\r\nx-var: foo";
