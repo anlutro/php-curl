@@ -30,4 +30,4 @@ jobs:
           php-version: ${{ matrix.php-version }}
           tools: composer
       - run: composer install --dev
-      - run: ./run-tests.sh -v
+      - run: ./run-tests.sh
