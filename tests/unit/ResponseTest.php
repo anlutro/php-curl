@@ -52,10 +52,10 @@ class ResponseTest extends TestCase
 	#[Test]
 	public function httpContinueResponsesAreHandled()
 	{
-		$header = "HTTP/1.1 100 Continue\r\n\r\nHTTP/1.1 200 OK\r\nx-var: foo";
+		$header = "HTTP/1.1 100 Continue\r\nx-var:foo\r\n\r\nHTTP/1.1 200 OK\r\nx-var: bar";
 		$r = $this->makeResponse('', $header);
 		$this->assertEquals(200, $r->statusCode);
-		$this->assertEquals('foo', $r->getHeader('x-var'));
+		$this->assertEquals('bar', $r->getHeader('x-var'));
 	}
 
 	#[Test]

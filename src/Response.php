@@ -95,20 +95,23 @@ class Response
 		// find and set the HTTP status code and reason
 		$firstHeader = array_shift($headers);
 		if (!preg_match('/^HTTP\/\d(\.\d)? [0-9]{3}/', $firstHeader)) {
-			throw new \UnexpectedValueException('Invalid response header');
+			throw new \UnexpectedValueException('Invalid response header: ' . var_export($firstHeader, true));
 		}
 		list(, $status) = explode(' ', $firstHeader, 2);
 		$code = explode(' ', $status);
 		$code = (int) $code[0];
 
-		// special handling for HTTP 100 responses
+		// special handling for HTTP 100 responses. this is *not* ideal, see:
+		// https://github.com/anlutro/php-curl/issues/75
 		if ($code === 100) {
-			// remove empty header lines between 100 and actual HTTP status
+			// skip all headers until we find the next "real" response
 			foreach ($headers as $idx => $header) {
-				if ($header) {
+				if (preg_match('/^HTTP\/\d(\.\d)? [0-9]{3}/', $header)) {
 					break;
 				}
 			}
+			// theoretically, a HTTP 100 response with no "follow-up" response
+			// is possible, but... we're not going to account for that.
 
 			// start the process over with the 100 continue header stripped away
 			return $this->parseHeaders(array_slice($headers, $idx));
