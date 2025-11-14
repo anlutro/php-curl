@@ -130,21 +130,21 @@ class cURLTest extends TestCase
 	#[Test]
 	public function throwsExceptionOnCurlError()
 	{
-		$this->setExpectedException('anlutro\cURL\cURLException', 'cURL request failed with error [7]:');
+		$this->expectException('anlutro\cURL\cURLException', 'cURL request failed with error [7]:');
 		$this->makeCurl()->get('http://0.0.0.0');
 	}
 
 	#[Test]
 	public function throwsExceptionWithMissingUrl()
 	{
-		$this->setExpectedException('BadMethodCallException', 'Missing argument 1 ($url) for anlutro\cURL\cURL::get');
+		$this->expectException('BadMethodCallException', 'Missing argument 1 ($url) for anlutro\cURL\cURL::get');
 		$this->makeCurl()->get();
 	}
 
 	#[Test]
 	public function throwsExceptionWhenDataProvidedButNotAllowed()
 	{
-		$this->setExpectedException('InvalidArgumentException', 'HTTP method [options] does not allow POST data.');
+		$this->expectException('InvalidArgumentException', 'HTTP method [options] does not allow POST data.');
 		$this->makeCurl()->options('http://localhost', array('foo' => 'bar'));
 	}
 

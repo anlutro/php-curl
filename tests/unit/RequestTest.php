@@ -75,21 +75,17 @@ class RequestTest extends TestCase
 		$this->assertEquals(array('foo' => 'bar'), $r->getHeaders());
 	}
 
-	/**
-	 * @test
-	 * @expectedException InvalidArgumentException
-	 */
+	#[Test]
 	public function invalidMethod()
 	{
+		$this->expectException("InvalidArgumentException");
 		$this->makeRequest()->setMethod('foo');
 	}
 
-	/**
-	 * @test
-	 * @expectedException InvalidArgumentException
-	 */
+	#[Test]
 	public function invalidEncoding()
 	{
+		$this->expectException("InvalidArgumentException");
 		$this->makeRequest()->setEncoding(999);
 	}
 
