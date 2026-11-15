@@ -65,6 +65,16 @@ class RequestTest extends TestCase
 	}
 
 	#[Test]
+	public function headerLineShorthandIsParsed()
+	{
+		$r = $this->makeRequest();
+		$r->setHeader('Accept: application/json');
+
+		$this->assertEquals('application/json', $r->getHeader('accept'));
+		$this->assertEquals(array('accept: application/json'), $r->formatHeaders());
+	}
+
+	#[Test]
 	public function headersAreCaseInsensitive()
 	{
 		$r = $this->makeRequest();

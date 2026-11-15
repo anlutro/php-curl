@@ -178,7 +178,7 @@ class Request
 	public function setHeader($key, $value = null, $preserveCase = false)
 	{
 		if ($value === null) {
-			list($key, $value) = explode(':', $value, 2);
+			list($key, $value) = explode(':', $key, 2);
 		}
 
 		if (!$preserveCase) {
